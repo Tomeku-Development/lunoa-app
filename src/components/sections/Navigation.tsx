@@ -37,10 +37,10 @@ export function Navigation({ activeTab, onTabChange }: NavigationProps) {
           <div className="flex items-center space-x-8">
             <div className="flex items-center space-x-2">
               <Image
-                src="/lunoa-icon.png"
+                src="/logo.svg"
                 alt="Lunoa Logo"
-                width={32}
-                height={32}
+                width={24}
+                height={24}
                 className="rounded-full"
               />
               <span className="text-xl font-bold text-gray-300">Lunoa</span>
