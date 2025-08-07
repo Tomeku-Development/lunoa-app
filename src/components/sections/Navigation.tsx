@@ -1,7 +1,22 @@
 "use client";
 import Image from "next/image";
-import { Search, Users, Settings, TrendingUp, UserPlus } from "lucide-react";
+import {
+  Search,
+  Users,
+  Settings,
+  TrendingUp,
+  UserPlus,
+  LogOut,
+  User,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface NavigationProps {
   activeTab: string;
@@ -13,7 +28,6 @@ export function Navigation({ activeTab, onTabChange }: NavigationProps) {
     { id: "dashboard", label: "Dashboard", icon: TrendingUp },
     { id: "discover", label: "Discover", icon: Search },
     { id: "verify-partner", label: "Verify Partner", icon: UserPlus },
-    { id: "settings", label: "Settings", icon: Settings },
   ];
 
   return (
@@ -29,7 +43,7 @@ export function Navigation({ activeTab, onTabChange }: NavigationProps) {
                 height={32}
                 className="rounded-full"
               />
-              <span className="text-xl font-bold text-white">Lunoa</span>
+              <span className="text-xl font-bold text-gray-300">Lunoa</span>
             </div>
 
             <div className="flex space-x-1">
@@ -55,9 +69,42 @@ export function Navigation({ activeTab, onTabChange }: NavigationProps) {
           </div>
 
           <div className="flex items-center space-x-4">
-            <div className="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center">
-              <Users className="h-4 w-4 text-gray-300" />
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="w-8 h-8 rounded-full p-0 hover:bg-gray-800"
+                >
+                  <div className="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center">
+                    <Users className="h-4 w-4 text-gray-300" />
+                  </div>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="w-56 bg-gray-800 border-gray-700"
+              >
+                <DropdownMenuItem
+                  onClick={() => onTabChange("profile")}
+                  className="text-gray-300 hover:text-white hover:bg-gray-700 cursor-pointer"
+                >
+                  <User className="mr-2 h-4 w-4" />
+                  Profile
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => onTabChange("settings")}
+                  className="text-gray-300 hover:text-white hover:bg-gray-700 cursor-pointer"
+                >
+                  <Settings className="mr-2 h-4 w-4" />
+                  Settings
+                </DropdownMenuItem>
+                <DropdownMenuSeparator className="bg-gray-700" />
+                <DropdownMenuItem className="text-gray-300 hover:text-white hover:bg-gray-700 cursor-pointer">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Log out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </div>
