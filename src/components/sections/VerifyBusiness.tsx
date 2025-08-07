@@ -26,41 +26,43 @@ export default function VerifyBusinessPartner() {
 
   const benefits = [
     {
-      icon: Gift,
-      title: "$50 Reward",
-      description:
-        "Earn $50 for each business that completes verification through your referral",
-    },
-    {
       icon: Shield,
-      title: "Build Trust Network",
+      title: "Enhanced Trust",
       description:
-        "Help create a more trustworthy business ecosystem for everyone",
+        "Help businesses build credibility through verified profiles and documentation",
     },
     {
       icon: Users,
-      title: "Strengthen Partnerships",
+      title: "Stronger Network",
       description:
         "Connect with verified businesses and build stronger professional relationships",
+    },
+    {
+      icon: CheckCircle,
+      title: "Quality Assurance",
+      description:
+        "Ensure all partners meet high standards of business verification",
     },
   ];
 
   const steps = [
     {
       number: "1",
-      title: "Share the Link",
-      description: "Send the signup link to businesses you want to verify",
+      title: "Invite Businesses",
+      description:
+        "Send the signup link to businesses you want to add to the network",
     },
     {
       number: "2",
-      title: "They Complete Verification",
+      title: "Verification Process",
       description:
-        "The business uploads documents and completes their trust profile",
+        "The business uploads documents and completes their verification profile",
     },
     {
       number: "3",
-      title: "Earn Your Reward",
-      description: "Once verified, you receive $50 credited to your account",
+      title: "Join Network",
+      description:
+        "Once verified, they become part of your trusted business network",
     },
   ];
 
@@ -73,11 +75,11 @@ export default function VerifyBusinessPartner() {
             <UserPlus className="h-8 w-8 text-white" />
           </div>
           <h1 className="text-4xl font-bold text-white mb-4">
-            Invite Business Partners
+            Add Business Partners
           </h1>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Help other businesses get verified on Lunoa and earn rewards while
-            building a stronger trust network.
+            Invite other businesses to get verified on Lunoa and build a
+            stronger, more trustworthy business network together.
           </p>
         </div>
 
@@ -109,7 +111,7 @@ export default function VerifyBusinessPartner() {
           <CardHeader className="text-center">
             <CardTitle className="text-2xl text-white">How It Works</CardTitle>
             <CardDescription className="text-gray-400">
-              Simple 3-step process to start earning rewards
+              Simple 3-step process to expand your verified network
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -138,21 +140,21 @@ export default function VerifyBusinessPartner() {
         <Card className="bg-gradient-to-br from-green-600 to-green-700 border-green-500">
           <CardContent className="p-8 text-center">
             <h2 className="text-2xl font-bold text-white mb-4">
-              Ready to Start Earning?
+              Ready to Expand Your Network?
             </h2>
             <p className="text-green-100 mb-6 max-w-md mx-auto">
-              Share the Lunoa signup link with businesses you know and start
-              earning $50 for each successful verification.
+              Share the Lunoa signup link with businesses you know and help them
+              join our verified business community.
             </p>
             <Button
               onClick={handleInvitePartner}
               className="bg-white text-green-700 hover:bg-green-50 px-8 py-3 text-lg font-semibold"
             >
               <UserPlus className="h-5 w-5 mr-2" />
-              Invite Business Partners
+              Add Business Partners
             </Button>
             <p className="text-green-200 text-sm mt-4">
-              No limit on referrals • Instant rewards • Build your network
+              No limit on invitations • Build trust • Grow your network
             </p>
           </CardContent>
         </Card>
@@ -161,11 +163,11 @@ export default function VerifyBusinessPartner() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
           <div className="text-center">
             <div className="text-3xl font-bold text-green-400 mb-2">500+</div>
-            <div className="text-gray-400">Businesses Verified</div>
+            <div className="text-gray-400">Verified Businesses</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-bold text-green-400 mb-2">$25K+</div>
-            <div className="text-gray-400">Rewards Paid Out</div>
+            <div className="text-3xl font-bold text-green-400 mb-2">95%</div>
+            <div className="text-gray-400">Verification Success Rate</div>
           </div>
           <div className="text-center">
             <div className="text-3xl font-bold text-green-400 mb-2">4.9★</div>
