@@ -5,13 +5,11 @@ import {
   TrendingUp,
   Users,
   FileText,
-  Shield,
   Star,
   ArrowRight,
   Plus,
   UserPlus,
   Gift,
-  CheckCircle2,
   Upload,
   CheckCircle,
   Eye,
@@ -19,7 +17,6 @@ import {
   Trash2,
   RotateCcw,
 } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -33,145 +30,18 @@ import { Progress } from "@/components/ui/progress";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { TrustGradeMeter } from "@/components/trust-grade-meter";
+import {
+  stats,
+  trustedPartners,
+  documents,
+  suggestedActions,
+} from "@/mock/mock";
 
 export function Dashboard() {
   const [dragActive, setDragActive] = useState(false);
-
-  const stats = [
-    {
-      title: "Trust Grade",
-      value: "A+",
-      description: "95% Trust Score",
-      icon: Shield,
-      color: "text-emerald-400",
-      bgColor: "bg-emerald-500/20",
-    },
-    {
-      title: "Active Partnerships",
-      value: "24",
-      description: "+3 this month",
-      icon: Users,
-      color: "text-green-400",
-      bgColor: "bg-green-500/20",
-    },
-    {
-      title: "Documents Verified",
-      value: "18",
-      description: "All up to date",
-      icon: FileText,
-      color: "text-teal-400",
-      bgColor: "bg-teal-500/20",
-    },
-    {
-      title: "Business Score",
-      value: "4.9",
-      description: "Based on 127 reviews",
-      icon: Star,
-      color: "text-lime-400",
-      bgColor: "bg-lime-500/20",
-    },
-  ];
-
-  const recentActivity = [
-    {
-      type: "verification",
-      title: "Document verification completed",
-      description: "Tax registration certificate approved",
-      time: "2 hours ago",
-      icon: CheckCircle2,
-      color: "text-green-400",
-    },
-    {
-      type: "partnership",
-      title: "New partnership request",
-      description: "TechFlow Solutions wants to connect",
-      time: "5 hours ago",
-      icon: Users,
-      color: "text-blue-400",
-    },
-    {
-      type: "document",
-      title: "Document update required",
-      description: "Insurance certificate expires in 30 days",
-      time: "1 day ago",
-      icon: FileText,
-      color: "text-yellow-400",
-    },
-    {
-      type: "review",
-      title: "New review received",
-      description: "5-star rating from Global Manufacturing Co.",
-      time: "2 days ago",
-      icon: Star,
-      color: "text-purple-400",
-    },
-  ];
-
-  const trustedPartners = [
-    {
-      name: "TechFlow Solutions",
-      industry: "Technology",
-      trustGrade: "A+",
-      trustPercentage: 95,
-      logo: "TF",
-      status: "Active",
-    },
-    {
-      name: "Global Manufacturing",
-      industry: "Manufacturing",
-      trustGrade: "A",
-      trustPercentage: 88,
-      logo: "GM",
-      status: "Active",
-    },
-    {
-      name: "Creative Design Studio",
-      industry: "Design",
-      trustGrade: "A-",
-      trustPercentage: 85,
-      logo: "CD",
-      status: "Pending",
-    },
-  ];
-
-  const documents = [
-    {
-      name: "Tax_Return_2023.pdf",
-      category: "Tax Return",
-      status: "Verified",
-      date: "Dec 15, 2023",
-    },
-    {
-      name: "Business_License.pdf",
-      category: "License",
-      status: "Verified",
-      date: "Dec 10, 2023",
-    },
-    {
-      name: "Bank_Statement_Nov.pdf",
-      category: "Financial",
-      status: "Processing",
-      date: "Dec 12, 2023",
-    },
-    {
-      name: "Insurance_Certificate.pdf",
-      category: "Insurance",
-      status: "Verified",
-      date: "Dec 8, 2023",
-    },
-  ];
-
-  const suggestedActions = [
-    { text: "Upload a supplier contract", completed: false, progress: 0 },
-    { text: "Add bank statement", completed: true, progress: 100 },
-    { text: "Add customer reference", completed: false, progress: 60 },
-    { text: "Complete business verification", completed: true, progress: 100 },
-    { text: "Upload recent invoices", completed: false, progress: 20 },
-  ];
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
