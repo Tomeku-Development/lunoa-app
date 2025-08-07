@@ -14,6 +14,8 @@ import {
   Building,
   Eye,
   UserPlus,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react"; // Icon library for UI elements.
 
 // Pre-styled UI components from a local library (likely shadcn/ui).
@@ -50,6 +52,13 @@ export function Discover() {
   const [selectedIndustry, setSelectedIndustry] = useState("all"); // Holds the selected industry filter.
   const [selectedLocation, setSelectedLocation] = useState("all"); // Holds the selected location filter.
 
+  // Additional filters state
+  const [showMoreFilters, setShowMoreFilters] = useState(false);
+  const [selectedCompanySize, setSelectedCompanySize] = useState("all");
+  const [selectedTrustGrade, setSelectedTrustGrade] = useState("all");
+  const [minRating, setMinRating] = useState("0");
+  const [onlyVerified, setOnlyVerified] = useState(false);
+
   // SECTION 2.2: Data Filtering Logic
   // -----------------------------------------------------------------------------------------------
   // Filters the 'businesses' array based on the current state of search and filter inputs.
@@ -69,8 +78,35 @@ export function Discover() {
     const matchesLocation =
       selectedLocation === "all" || business.location === selectedLocation;
 
+    // Additional filter conditions
+    const employeeCount =
+      parseInt(business.employees.toString().replace(/[^0-9]/g, ""), 10) || 0;
+    const matchesCompanySize =
+      selectedCompanySize === "all" ||
+      (selectedCompanySize === "small" && employeeCount <= 50) ||
+      (selectedCompanySize === "medium" &&
+        employeeCount > 50 &&
+        employeeCount <= 500) ||
+      (selectedCompanySize === "large" && employeeCount > 500);
+
+    const matchesTrustGrade =
+      selectedTrustGrade === "all" ||
+      business.trustGrade === selectedTrustGrade;
+
+    const matchesMinRating = business.rating >= parseFloat(minRating);
+
+    const matchesVerification = !onlyVerified || business.verified;
+
     // A business is included in the result only if all conditions are true.
-    return matchesSearch && matchesIndustry && matchesLocation;
+    return (
+      matchesSearch &&
+      matchesIndustry &&
+      matchesLocation &&
+      matchesCompanySize &&
+      matchesTrustGrade &&
+      matchesMinRating &&
+      matchesVerification
+    );
   });
 
   // SECTION 2.3: Event Handlers
@@ -145,7 +181,7 @@ export function Discover() {
                 <SelectTrigger className="w-full lg:w-48 bg-gray-800 border-gray-600 text-white">
                   <SelectValue placeholder="Industry" />
                 </SelectTrigger>
-                <SelectContent className="bg-gray-800 border-gray-600">
+                <SelectContent className="bg-gray-800 border-gray-600 text-white">
                   <SelectItem value="all">All Industries</SelectItem>
                   {industries.map((industry) => (
                     <SelectItem key={industry} value={industry}>
@@ -163,7 +199,7 @@ export function Discover() {
                 <SelectTrigger className="w-full lg:w-48 bg-gray-800 border-gray-600 text-white">
                   <SelectValue placeholder="Location" />
                 </SelectTrigger>
-                <SelectContent className="bg-gray-800 border-gray-600">
+                <SelectContent className="bg-gray-800 border-gray-600 text-white">
                   <SelectItem value="all">All Locations</SelectItem>
                   {locations.map((location) => (
                     <SelectItem key={location} value={location}>
@@ -173,15 +209,120 @@ export function Discover() {
                 </SelectContent>
               </Select>
 
-              {/* More Filters Button (Placeholder) */}
+              {/* More Filters Button */}
               <Button
                 variant="outline"
-                className="border-gray-600 text-gray-800 hover:bg-gray-800"
+                className="border-gray-600 hover:bg-gray-800"
+                onClick={() => setShowMoreFilters(!showMoreFilters)}
               >
                 <Filter className="h-4 w-4 mr-2" />
                 More Filters
+                {showMoreFilters ? (
+                  <ChevronUp className="h-4 w-4 ml-2" />
+                ) : (
+                  <ChevronDown className="h-4 w-4 ml-2" />
+                )}
               </Button>
             </div>
+
+            {/* Additional Filters Section */}
+            {showMoreFilters && (
+              <div className="mt-4 pt-4 border-t border-gray-700">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {/* Company Size Filter */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-400">
+                      Company Size
+                    </label>
+                    <Select
+                      value={selectedCompanySize}
+                      onValueChange={setSelectedCompanySize}
+                    >
+                      <SelectTrigger className="bg-gray-800 border-gray-600 text-white">
+                        <SelectValue placeholder="All Sizes" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-800 border-gray-600 text-white">
+                        <SelectItem value="all">All Sizes</SelectItem>
+                        <SelectItem value="small">
+                          Small (1-50 employees)
+                        </SelectItem>
+                        <SelectItem value="medium">
+                          Medium (51-500 employees)
+                        </SelectItem>
+                        <SelectItem value="large">
+                          Large (500+ employees)
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Trust Grade Filter */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-400">
+                      Trust Grade
+                    </label>
+                    <Select
+                      value={selectedTrustGrade}
+                      onValueChange={setSelectedTrustGrade}
+                    >
+                      <SelectTrigger className="bg-gray-800 border-gray-600 text-white">
+                        <SelectValue placeholder="All Grades" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-800 border-gray-600 text-white">
+                        <SelectItem value="all">All Grades</SelectItem>
+                        <SelectItem value="A">Grade A</SelectItem>
+                        <SelectItem value="B">Grade B</SelectItem>
+                        <SelectItem value="C">Grade C</SelectItem>
+                        <SelectItem value="D">Grade D</SelectItem>
+                        <SelectItem value="F">Grade F</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Minimum Rating Filter */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-400">
+                      Minimum Rating
+                    </label>
+                    <Select value={minRating} onValueChange={setMinRating}>
+                      <SelectTrigger className="bg-gray-800 border-gray-600 text-white">
+                        <SelectValue placeholder="Any Rating" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-800 border-gray-600 text-white">
+                        <SelectItem value="0">Any Rating</SelectItem>
+                        <SelectItem value="1">1+ Stars</SelectItem>
+                        <SelectItem value="2">2+ Stars</SelectItem>
+                        <SelectItem value="3">3+ Stars</SelectItem>
+                        <SelectItem value="4">4+ Stars</SelectItem>
+                        <SelectItem value="4.5">4.5+ Stars</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Verification Filter */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-400">
+                      Verification Status
+                    </label>
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id="verified-only"
+                        checked={onlyVerified}
+                        onChange={(e) => setOnlyVerified(e.target.checked)}
+                        className="w-4 h-4 text-green-600 bg-gray-800 border-gray-600 rounded focus:ring-green-500"
+                      />
+                      <label
+                        htmlFor="verified-only"
+                        className="text-sm text-gray-400"
+                      >
+                        Verified businesses only
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -278,47 +419,16 @@ export function Discover() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="flex-1 border-gray-600 text-gray-800 hover:bg-gray-700"
+                    className="flex-1 border-gray-600 hover:bg-gray-700"
                     onClick={() => handleViewProfile(business.name)}
                   >
                     <Eye className="h-4 w-4 mr-2" />
                     View Profile
                   </Button>
-                  {/* Conditional Button: "Connect" for verified, "Help Verify" for unverified */}
-                  {business.verified ? (
-                    <Button
-                      size="sm"
-                      className="flex-1 bg-green-600 hover:bg-green-700 text-white"
-                      onClick={() => handleConnectBusiness(business.id)}
-                    >
-                      <Users className="h-4 w-4 mr-2" />
-                      Connect
-                    </Button>
-                  ) : (
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="flex-1 border-blue-600 text-blue-400 hover:bg-blue-600 hover:text-white"
-                      onClick={() => handleVerifyBusiness(business.id)}
-                    >
-                      <UserPlus className="h-4 w-4 mr-2" />
-                      Help Verify
-                    </Button>
-                  )}
                 </div>
               </CardContent>
             </Card>
           ))}
-        </div>
-
-        {/* Load More Button (Placeholder) */}
-        <div className="text-center mt-8">
-          <Button
-            variant="outline"
-            className="border-gray-600 text-gray-800 hover:bg-gray-800"
-          >
-            Load More Businesses
-          </Button>
         </div>
       </div>
     </div>
