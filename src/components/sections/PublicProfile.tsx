@@ -42,6 +42,36 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { TrustGradeMeter } from "@/components/trust-grade-meter";
+import { LucideIcon } from "lucide-react";
+
+interface TrustBreakdownItem {
+  title: string;
+  status: "strong" | "moderate" | "weak";
+  icon: LucideIcon;
+  description: string;
+  details: string;
+  color: string;
+}
+
+interface VerifiedDocument {
+  type: string;
+  status: string;
+  date: string;
+  category: string;
+}
+
+interface BusinessStats {
+  yearsActive: number;
+  documentsVerified: number;
+  partnerReferences: number;
+  lastUpdated: string;
+}
+
+interface ContactInfo {
+  phone?: string;
+  website?: string;
+  email?: string;
+}
 
 interface PublicBusinessProfileProps {
   businessName?: string;
@@ -51,6 +81,17 @@ interface PublicBusinessProfileProps {
   location?: string;
   verificationDate?: string;
   description?: string;
+  trustBreakdown?: TrustBreakdownItem[];
+  verifiedDocuments?: VerifiedDocument[];
+  businessStats?: BusinessStats;
+  contactInfo?: ContactInfo;
+  onContactBusiness?: (businessName: string) => void;
+  onReportIssue?: (businessName: string) => void;
+  onViewFullDocuments?: () => void;
+  onCallBusiness?: () => void;
+  onVisitWebsite?: () => void;
+  showContactButtons?: boolean;
+  showReportButton?: boolean;
 }
 
 export function PublicBusinessProfile({
@@ -61,6 +102,17 @@ export function PublicBusinessProfile({
   location = "Lahore, Pakistan",
   verificationDate = "June 22, 2024",
   description = "Established textile manufacturer specializing in high-quality fabric production and export services across South Asia.",
+  trustBreakdown,
+  verifiedDocuments,
+  businessStats,
+  contactInfo,
+  onContactBusiness,
+  onReportIssue,
+  onViewFullDocuments,
+  onCallBusiness,
+  onVisitWebsite,
+  showContactButtons = true,
+  showReportButton = true,
 }: PublicBusinessProfileProps) {
   const getTrustGradeColor = (grade: string) => {
     if (grade.startsWith("A"))
@@ -70,7 +122,7 @@ export function PublicBusinessProfile({
     return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
   };
 
-  const trustBreakdown = [
+  const defaultTrustBreakdown: TrustBreakdownItem[] = [
     {
       title: "Compliance",
       status: "strong",
@@ -97,7 +149,7 @@ export function PublicBusinessProfile({
     },
   ];
 
-  const verifiedDocuments = [
+  const defaultVerifiedDocuments: VerifiedDocument[] = [
     {
       type: "Business License",
       status: "Verified",
@@ -118,23 +170,68 @@ export function PublicBusinessProfile({
     },
   ];
 
-  const businessStats = {
+  const defaultBusinessStats: BusinessStats = {
     yearsActive: 8,
     documentsVerified: 12,
     partnerReferences: 3,
     lastUpdated: "2 days ago",
   };
 
+  const defaultContactInfo: ContactInfo = {
+    phone: "+92 123 456 7890",
+    website: "www.akhtarindustries.com",
+    email: "contact@akhtarindustries.com",
+  };
+
+  // Use provided props or defaults
+  const finalTrustBreakdown = trustBreakdown || defaultTrustBreakdown;
+  const finalVerifiedDocuments = verifiedDocuments || defaultVerifiedDocuments;
+  const finalBusinessStats = { ...defaultBusinessStats, ...businessStats };
+  const finalContactInfo = { ...defaultContactInfo, ...contactInfo };
+
   const handleContactBusiness = () => {
-    console.log("Contact business clicked");
-    // In a real app, this would open a contact form or redirect to messaging
-    alert("Contact form would open here");
+    if (onContactBusiness) {
+      onContactBusiness(businessName);
+    } else {
+      console.log("Contact business clicked");
+      alert("Contact form would open here");
+    }
   };
 
   const handleReportIssue = () => {
-    console.log("Report issue clicked");
-    // In a real app, this would open a report form
-    alert("Report issue form would open here");
+    if (onReportIssue) {
+      onReportIssue(businessName);
+    } else {
+      console.log("Report issue clicked");
+      alert("Report issue form would open here");
+    }
+  };
+
+  const handleCallBusiness = () => {
+    if (onCallBusiness) {
+      onCallBusiness();
+    } else if (finalContactInfo.phone) {
+      window.open(`tel:${finalContactInfo.phone}`);
+    }
+  };
+
+  const handleVisitWebsite = () => {
+    if (onVisitWebsite) {
+      onVisitWebsite();
+    } else if (finalContactInfo.website) {
+      const url = finalContactInfo.website.startsWith("http")
+        ? finalContactInfo.website
+        : `https://${finalContactInfo.website}`;
+      window.open(url, "_blank");
+    }
+  };
+
+  const handleViewFullDocuments = () => {
+    if (onViewFullDocuments) {
+      onViewFullDocuments();
+    } else {
+      console.log("View full documents clicked");
+    }
   };
 
   return (
@@ -298,7 +395,7 @@ export function PublicBusinessProfile({
                   Trust Breakdown
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {trustBreakdown.map((item, index) => {
+                  {finalTrustBreakdown.map((item, index) => {
                     const IconComponent = item.icon;
                     const isStrong = item.status === "strong";
                     const isModerate = item.status === "moderate";
@@ -382,17 +479,18 @@ export function PublicBusinessProfile({
                         variant="outline"
                         className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300"
                       >
-                        {verifiedDocuments.length} of{" "}
-                        {businessStats.documentsVerified} shown
+                        {finalVerifiedDocuments.length} of{" "}
+                        {finalBusinessStats.documentsVerified} shown
                       </Badge>
                     </CardTitle>
                     <CardDescription className="text-gray-600 dark:text-gray-400">
-                      Key documents verified by Lunoa's verification process
+                      Key documents verified by Lunoa&apos;s verification
+                      process
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
-                      {verifiedDocuments.map((doc, index) => (
+                      {finalVerifiedDocuments.map((doc, index) => (
                         <div
                           key={index}
                           className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg"
@@ -428,6 +526,7 @@ export function PublicBusinessProfile({
                       <Button
                         variant="outline"
                         className="w-full border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                        onClick={handleViewFullDocuments}
                       >
                         <ExternalLink className="h-4 w-4 mr-2" />
                         See Full Document List
@@ -454,7 +553,7 @@ export function PublicBusinessProfile({
                         Years Active
                       </span>
                       <span className="font-semibold text-gray-900 dark:text-white">
-                        {businessStats.yearsActive} years
+                        {finalBusinessStats.yearsActive} years
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
@@ -462,7 +561,7 @@ export function PublicBusinessProfile({
                         Documents Verified
                       </span>
                       <span className="font-semibold text-gray-900 dark:text-white">
-                        {businessStats.documentsVerified}
+                        {finalBusinessStats.documentsVerified}
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
@@ -470,7 +569,7 @@ export function PublicBusinessProfile({
                         Partner References
                       </span>
                       <span className="font-semibold text-gray-900 dark:text-white">
-                        {businessStats.partnerReferences}
+                        {finalBusinessStats.partnerReferences}
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
@@ -478,7 +577,7 @@ export function PublicBusinessProfile({
                         Last Updated
                       </span>
                       <span className="font-semibold text-gray-900 dark:text-white">
-                        {businessStats.lastUpdated}
+                        {finalBusinessStats.lastUpdated}
                       </span>
                     </div>
                   </div>
@@ -486,56 +585,66 @@ export function PublicBusinessProfile({
               </Card>
 
               {/* Call to Action */}
-              <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700">
-                <CardHeader>
-                  <CardTitle className="text-gray-900 dark:text-white">
-                    Get in Touch
-                  </CardTitle>
-                  <CardDescription className="text-gray-600 dark:text-gray-400">
-                    Connect with this verified business
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <Button
-                    className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white"
-                    onClick={handleContactBusiness}
-                  >
-                    <Mail className="h-4 w-4 mr-2" />
-                    Contact This Business
-                  </Button>
+              {showContactButtons && (
+                <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700">
+                  <CardHeader>
+                    <CardTitle className="text-gray-900 dark:text-white">
+                      Get in Touch
+                    </CardTitle>
+                    <CardDescription className="text-gray-600 dark:text-gray-400">
+                      Connect with this verified business
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <Button
+                      className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white"
+                      onClick={handleContactBusiness}
+                    >
+                      <Mail className="h-4 w-4 mr-2" />
+                      Contact This Business
+                    </Button>
 
-                  <div className="grid grid-cols-2 gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300"
-                    >
-                      <Phone className="h-4 w-4 mr-1" />
-                      Call
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300"
-                    >
-                      <Globe className="h-4 w-4 mr-1" />
-                      Website
-                    </Button>
-                  </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      {finalContactInfo.phone && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300"
+                          onClick={handleCallBusiness}
+                        >
+                          <Phone className="h-4 w-4 mr-1" />
+                          Call
+                        </Button>
+                      )}
+                      {finalContactInfo.website && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300"
+                          onClick={handleVisitWebsite}
+                        >
+                          <Globe className="h-4 w-4 mr-1" />
+                          Website
+                        </Button>
+                      )}
+                    </div>
 
-                  <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="w-full text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
-                      onClick={handleReportIssue}
-                    >
-                      <Flag className="h-4 w-4 mr-2" />
-                      Report an Issue
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+                    {showReportButton && (
+                      <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="w-full text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                          onClick={handleReportIssue}
+                        >
+                          <Flag className="h-4 w-4 mr-2" />
+                          Report an Issue
+                        </Button>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
 
               {/* Verification Badge */}
               <Card className="bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-950/20 dark:to-blue-950/20 border-green-200 dark:border-green-800">
