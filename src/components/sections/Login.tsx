@@ -229,7 +229,7 @@ export default function Login() {
 
               <div className="mt-6 text-center">
                 <p className="text-gray-400 text-sm">
-                  Don't have an account?{" "}
+                  Don&apos;t have an account?{" "}
                   <button
                     type="button"
                     onClick={handleCreateAccount}
@@ -286,9 +286,9 @@ export default function Login() {
               </div>
             </div>
             <p className="text-gray-300 text-sm italic">
-              "This platform has revolutionized how we connect with business
-              partners. The verification process gives us confidence in every
-              connection we make."
+              &quot;This platform has revolutionized how we connect with
+              business partners. The verification process gives us confidence in
+              every connection we make.&quot;
             </p>
           </div>
         </div>
