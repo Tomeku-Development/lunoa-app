@@ -3,7 +3,6 @@
 import {
   Shield,
   CheckCircle,
-  AlertTriangle,
   ThumbsUp,
   FileText,
   MapPin,
@@ -17,6 +16,8 @@ import {
   Award,
   Users,
   TrendingUp,
+  ArrowLeft,
+  HelpCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -90,8 +91,10 @@ interface PublicBusinessProfileProps {
   onViewFullDocuments?: () => void;
   onCallBusiness?: () => void;
   onVisitWebsite?: () => void;
+  onBack?: () => void;
   showContactButtons?: boolean;
   showReportButton?: boolean;
+  showBackButton?: boolean;
 }
 
 export function PublicBusinessProfile({
@@ -111,8 +114,10 @@ export function PublicBusinessProfile({
   onViewFullDocuments,
   onCallBusiness,
   onVisitWebsite,
+  onBack,
   showContactButtons = true,
   showReportButton = true,
+  showBackButton = true,
 }: PublicBusinessProfileProps) {
   const getTrustGradeColor = (grade: string) => {
     if (grade.startsWith("A"))
@@ -234,167 +239,354 @@ export function PublicBusinessProfile({
     }
   };
 
+  const handleBack = () => {
+    if (onBack) {
+      onBack();
+    } else {
+      window.history.back();
+    }
+  };
+
   return (
     <TooltipProvider>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 py-8">
-        <div className="max-w-4xl mx-auto px-6">
+      <div className="min-h-screen bg-gray-950 py-4 sm:py-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          {/* Back Button */}
+          {showBackButton && (
+            <div className="mb-4 sm:mb-6">
+              <Button
+                variant="ghost"
+                onClick={handleBack}
+                className="text-gray-400 hover:text-white hover:bg-gray-800/40 p-2"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                <span className="text-sm sm:text-base">Back</span>
+              </Button>
+            </div>
+          )}
+
           {/* Header Section */}
-          <Card className="mb-8 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 shadow-lg">
-            <CardContent className="p-8">
-              <div className="flex flex-col md:flex-row items-start md:items-center justify-between space-y-6 md:space-y-0">
-                <div className="flex items-start space-x-6">
-                  {/* Business Logo */}
-                  <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-                    <span className="text-2xl font-bold text-white">
-                      {businessName
-                        .split(" ")
-                        .map((word) => word[0])
-                        .join("")
-                        .slice(0, 2)}
-                    </span>
-                  </div>
-
-                  {/* Business Info */}
-                  <div className="space-y-3">
-                    <div>
-                      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                        {businessName}
-                      </h1>
-                      <p className="text-gray-600 dark:text-gray-300 max-w-md">
-                        {description}
-                      </p>
+          <Card className="mb-6 sm:mb-8 bg-gray-900/60 border-gray-700/50 shadow-lg backdrop-blur-sm overflow-hidden">
+            <CardContent className="p-0">
+              {/* Main Header Content */}
+              <div className="p-6 sm:p-8 lg:p-10">
+                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-8 lg:space-y-0 lg:space-x-8">
+                  {/* Left Section - Business Identity */}
+                  <div className="flex flex-col sm:flex-row items-start space-y-6 sm:space-y-0 sm:space-x-6 flex-1">
+                    {/* Business Logo */}
+                    <div className="relative">
+                      <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-emerald-600 to-green-700 rounded-2xl flex items-center justify-center shadow-xl border-2 border-emerald-500/20">
+                        <span className="text-xl sm:text-3xl font-bold text-white">
+                          {businessName
+                            .split(" ")
+                            .map((word) => word[0])
+                            .join("")
+                            .slice(0, 2)}
+                        </span>
+                      </div>
+                      {/* Verified Badge on Logo */}
+                      <div className="absolute -top-2 -right-2 bg-emerald-500 rounded-full p-2 border-2 border-gray-950 shadow-lg">
+                        <CheckCircle className="h-4 w-4 text-white" />
+                      </div>
                     </div>
 
-                    {/* Tags */}
-                    <div className="flex flex-wrap items-center gap-3">
-                      <Badge className={getTrustGradeColor(trustGrade)}>
-                        <Award className="h-3 w-3 mr-1" />
-                        Trust Grade: {trustGrade}
-                      </Badge>
-                      <Badge
-                        variant="outline"
-                        className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300"
-                      >
-                        <Building className="h-3 w-3 mr-1" />
-                        {industry}
-                      </Badge>
-                      <Badge
-                        variant="outline"
-                        className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300"
-                      >
-                        <MapPin className="h-3 w-3 mr-1" />
-                        {location}
-                      </Badge>
+                    {/* Business Information */}
+                    <div className="space-y-4 flex-1 min-w-0">
+                      {/* Business Name and Trust Grade Badge */}
+                      <div className="space-y-3">
+                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between space-y-3 sm:space-y-0">
+                          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight break-words">
+                            {businessName}
+                          </h1>
+                          <div className="flex-shrink-0">
+                            <Badge
+                              className={`${getTrustGradeColor(
+                                trustGrade
+                              )} px-4 py-2 text-base font-bold border-2`}
+                            >
+                              <Award className="h-5 w-5 mr-2" />
+                              Grade: {trustGrade}
+                            </Badge>
+                          </div>
+                        </div>
+
+                        {/* Business Description */}
+                        <p className="text-lg sm:text-xl text-gray-300 leading-relaxed max-w-3xl">
+                          {description}
+                        </p>
+                      </div>
+
+                      {/* Business Metadata Tags */}
+                      <div className="flex flex-wrap items-center gap-3">
+                        <Badge
+                          variant="outline"
+                          className="border-gray-500 text-gray-200 bg-gray-800/40 px-3 py-2 text-sm"
+                        >
+                          <Building className="h-4 w-4 mr-2" />
+                          <span className="hidden sm:inline">{industry}</span>
+                          <span className="sm:hidden">Manufacturing</span>
+                        </Badge>
+                        <Badge
+                          variant="outline"
+                          className="border-gray-500 text-gray-200 bg-gray-800/40 px-3 py-2 text-sm"
+                        >
+                          <MapPin className="h-4 w-4 mr-2" />
+                          {location}
+                        </Badge>
+                        <Badge
+                          variant="outline"
+                          className="border-emerald-500/50 text-emerald-300 bg-emerald-500/10 px-3 py-2 text-sm"
+                        >
+                          <Shield className="h-4 w-4 mr-2" />
+                          Lunoa Verified
+                        </Badge>
+                      </div>
+
+                      {/* Quick Stats */}
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4">
+                        <div className="bg-gray-800/40 rounded-xl p-4 text-center">
+                          <div className="text-2xl font-bold text-white">
+                            {finalBusinessStats.yearsActive}
+                          </div>
+                          <div className="text-xs text-gray-400 mt-1">
+                            Years Active
+                          </div>
+                        </div>
+                        <div className="bg-gray-800/40 rounded-xl p-4 text-center">
+                          <div className="text-2xl font-bold text-white">
+                            {finalBusinessStats.documentsVerified}
+                          </div>
+                          <div className="text-xs text-gray-400 mt-1">
+                            Documents
+                          </div>
+                        </div>
+                        <div className="bg-gray-800/40 rounded-xl p-4 text-center">
+                          <div className="text-2xl font-bold text-white">
+                            {finalBusinessStats.partnerReferences}
+                          </div>
+                          <div className="text-xs text-gray-400 mt-1">
+                            References
+                          </div>
+                        </div>
+                        <div className="bg-gray-800/40 rounded-xl p-4 text-center">
+                          <div className="text-2xl font-bold text-emerald-400">
+                            {trustPercentage}%
+                          </div>
+                          <div className="text-xs text-gray-400 mt-1">
+                            Trust Score
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Trust Grade Meter */}
-                <div className="flex-shrink-0">
-                  <TrustGradeMeter
-                    grade={trustGrade}
-                    percentage={trustPercentage}
-                    size="md"
-                  />
+                  {/* Right Section - Trust Grade Meter */}
+                  <div className="flex-shrink-0">
+                    <div className="flex justify-center lg:justify-end">
+                      <TrustGradeMeter
+                        grade={trustGrade}
+                        percentage={trustPercentage}
+                        size="lg"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </CardContent>
           </Card>
 
           {/* Verified Summary */}
-          <Card className="mb-8 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950/20 dark:to-blue-950/20 border-green-200 dark:border-green-800">
-            <CardContent className="p-6">
-              <div className="flex items-start space-x-4">
-                <div className="p-2 bg-green-500/20 rounded-lg">
-                  <Shield className="h-6 w-6 text-green-600 dark:text-green-400" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
-                    Lunoa-Verified Business
-                  </h3>
-                  <p className="text-gray-700 dark:text-gray-300 mb-3">
-                    This business has been verified by Lunoa based on legal,
-                    financial, and reputational documents. Our verification
-                    process ensures authenticity and credibility.
-                  </p>
-                  <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400">
-                    <div className="flex items-center space-x-1">
-                      <Calendar className="h-4 w-4" />
-                      <span>Verified on: {verificationDate}</span>
+          <Card className="mb-6 sm:mb-8 bg-gradient-to-br from-emerald-600/20 to-green-700/20 border-emerald-500/30 backdrop-blur-sm overflow-hidden">
+            <CardContent className="p-0">
+              {/* Header Section */}
+              <div className="bg-gradient-to-r from-emerald-600/30 to-green-700/30 p-4 sm:p-6 border-b border-emerald-500/20">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="p-3 bg-emerald-500/30 rounded-xl border border-emerald-400/30">
+                      <Shield className="h-6 w-6 sm:h-7 sm:w-7 text-emerald-200" />
                     </div>
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button
-                          variant="link"
-                          className="p-0 h-auto text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300"
-                        >
-                          What is Lunoa verification?
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
-                        <DialogHeader>
-                          <DialogTitle className="text-gray-900 dark:text-white">
-                            Lunoa Verification Process
-                          </DialogTitle>
-                          <DialogDescription className="text-gray-600 dark:text-gray-300">
-                            Our comprehensive verification system evaluates
-                            businesses across three key areas:
-                          </DialogDescription>
-                        </DialogHeader>
+                    <div>
+                      <h3 className="font-bold text-white text-xl sm:text-2xl">
+                        Lunoa-Verified Business
+                      </h3>
+                      <p className="text-emerald-200 text-sm sm:text-base">
+                        Comprehensive verification completed
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex-shrink-0 ml-auto">
+                    <Badge className="bg-emerald-500/20 text-emerald-200 border-emerald-400/30 px-4 py-2 text-sm font-semibold">
+                      <CheckCircle className="h-4 w-4 mr-2" />
+                      Verified
+                    </Badge>
+                  </div>
+                </div>
+              </div>
+
+              {/* Content Section */}
+              <div className="p-4 sm:p-6 space-y-6">
+                {/* Description */}
+                <div className="space-y-3">
+                  <p className="text-emerald-100 text-base sm:text-lg leading-relaxed">
+                    This business has been thoroughly verified by Lunoa through
+                    our comprehensive multi-stage validation process. Our
+                    verification ensures authenticity, credibility, and
+                    regulatory compliance.
+                  </p>
+                </div>
+
+                {/* Verification Details Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                  <div className="bg-emerald-500/10 rounded-xl p-4 border border-emerald-500/20">
+                    <div className="flex items-center space-x-3 mb-2">
+                      <Shield className="h-5 w-5 text-emerald-300" />
+                      <span className="font-semibold text-emerald-200 text-sm sm:text-base">
+                        Legal Compliance
+                      </span>
+                    </div>
+                    <p className="text-emerald-100/80 text-sm">
+                      Business licenses, registrations, and regulatory documents
+                      verified
+                    </p>
+                  </div>
+
+                  <div className="bg-emerald-500/10 rounded-xl p-4 border border-emerald-500/20">
+                    <div className="flex items-center space-x-3 mb-2">
+                      <TrendingUp className="h-5 w-5 text-emerald-300" />
+                      <span className="font-semibold text-emerald-200 text-sm sm:text-base">
+                        Financial Standing
+                      </span>
+                    </div>
+                    <p className="text-emerald-100/80 text-sm">
+                      Financial records, tax compliance, and payment history
+                      reviewed
+                    </p>
+                  </div>
+
+                  <div className="bg-emerald-500/10 rounded-xl p-4 border border-emerald-500/20 sm:col-span-2 lg:col-span-1">
+                    <div className="flex items-center space-x-3 mb-2">
+                      <Users className="h-5 w-5 text-emerald-300" />
+                      <span className="font-semibold text-emerald-200 text-sm sm:text-base">
+                        Business Reputation
+                      </span>
+                    </div>
+                    <p className="text-emerald-100/80 text-sm">
+                      Client references, testimonials, and industry standing
+                      evaluated
+                    </p>
+                  </div>
+                </div>
+
+                {/* Verification Metadata */}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0 pt-4 border-t border-emerald-500/20">
+                  <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-6">
+                    <div className="flex items-center space-x-2 text-sm text-emerald-200/80">
+                      <Calendar className="h-4 w-4" />
+                      <span>Verified: {verificationDate}</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-sm text-emerald-200/80">
+                      <FileText className="h-4 w-4" />
+                      <span>
+                        {finalBusinessStats.documentsVerified} documents
+                        verified
+                      </span>
+                    </div>
+                  </div>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button
+                        variant="link"
+                        className="p-0 h-auto text-sm text-emerald-300 hover:text-emerald-200 self-start sm:self-auto transition-colors duration-200"
+                      >
+                        <HelpCircle className="h-4 w-4 mr-1" />
+                        Learn about Lunoa verification
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="bg-gray-900 border-gray-700 max-w-md sm:max-w-lg">
+                      <DialogHeader>
+                        <DialogTitle className="text-white flex items-center space-x-2">
+                          <Shield className="h-5 w-5 text-emerald-400" />
+                          <span>Lunoa Verification Process</span>
+                        </DialogTitle>
+                        <DialogDescription className="text-gray-300">
+                          Our comprehensive verification system evaluates
+                          businesses across multiple dimensions
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-6 mt-4">
                         <div className="space-y-4">
                           <div className="flex items-start space-x-3">
-                            <Shield className="h-5 w-5 text-green-500 mt-0.5" />
+                            <div className="p-2 bg-emerald-500/20 rounded-lg flex-shrink-0">
+                              <Shield className="h-5 w-5 text-emerald-400" />
+                            </div>
                             <div>
-                              <h4 className="font-medium text-gray-900 dark:text-white">
-                                Legal Compliance
+                              <h4 className="font-semibold text-white mb-1">
+                                Legal Compliance Verification
                               </h4>
-                              <p className="text-sm text-gray-600 dark:text-gray-400">
-                                Business licenses, registrations, and regulatory
-                                compliance
+                              <p className="text-sm text-gray-300 leading-relaxed">
+                                We verify business licenses, registrations,
+                                regulatory compliance, and ensure all legal
+                                requirements are met.
                               </p>
                             </div>
                           </div>
                           <div className="flex items-start space-x-3">
-                            <TrendingUp className="h-5 w-5 text-blue-500 mt-0.5" />
+                            <div className="p-2 bg-blue-500/20 rounded-lg flex-shrink-0">
+                              <TrendingUp className="h-5 w-5 text-blue-400" />
+                            </div>
                             <div>
-                              <h4 className="font-medium text-gray-900 dark:text-white">
-                                Financial Performance
+                              <h4 className="font-semibold text-white mb-1">
+                                Financial Performance Review
                               </h4>
-                              <p className="text-sm text-gray-600 dark:text-gray-400">
-                                Financial statements, tax records, and payment
-                                history
+                              <p className="text-sm text-gray-300 leading-relaxed">
+                                Financial statements, tax records, payment
+                                history, and business stability indicators are
+                                thoroughly reviewed.
                               </p>
                             </div>
                           </div>
                           <div className="flex items-start space-x-3">
-                            <Users className="h-5 w-5 text-purple-500 mt-0.5" />
+                            <div className="p-2 bg-purple-500/20 rounded-lg flex-shrink-0">
+                              <Users className="h-5 w-5 text-purple-400" />
+                            </div>
                             <div>
-                              <h4 className="font-medium text-gray-900 dark:text-white">
-                                Business Reputation
+                              <h4 className="font-semibold text-white mb-1">
+                                Reputation Assessment
                               </h4>
-                              <p className="text-sm text-gray-600 dark:text-gray-400">
-                                Client references, testimonials, and industry
-                                standing
+                              <p className="text-sm text-gray-300 leading-relaxed">
+                                Client references, testimonials, industry
+                                certifications, and public feedback are
+                                evaluated for credibility.
                               </p>
                             </div>
                           </div>
                         </div>
-                      </DialogContent>
-                    </Dialog>
-                  </div>
+                        <div className="bg-gray-800/40 rounded-lg p-4 border-l-4 border-emerald-500">
+                          <p className="text-sm text-gray-300">
+                            <strong className="text-emerald-400">
+                              Trust Guarantee:
+                            </strong>{" "}
+                            Businesses displaying the Lunoa Verified badge have
+                            completed our rigorous verification process and meet
+                            our standards for authenticity and reliability.
+                          </p>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 space-y-8">
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 sm:gap-8">
+            <div className="xl:col-span-2 space-y-6 sm:space-y-8">
               {/* Trust Breakdown Panel */}
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+                <h2 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">
                   Trust Breakdown
                 </h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-4 sm:gap-6">
                   {finalTrustBreakdown.map((item, index) => {
                     const IconComponent = item.icon;
                     const isStrong = item.status === "strong";
@@ -403,20 +595,20 @@ export function PublicBusinessProfile({
                     return (
                       <Card
                         key={index}
-                        className={`border-2 transition-all hover:shadow-lg ${
+                        className={`border-2 transition-all hover:shadow-lg bg-gray-900/60 backdrop-blur-sm ${
                           isStrong
-                            ? "border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950/20"
+                            ? "border-emerald-500/30 hover:border-emerald-500/50"
                             : isModerate
-                            ? "border-yellow-200 dark:border-yellow-800 bg-yellow-50 dark:bg-yellow-950/20"
-                            : "border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/20"
+                            ? "border-yellow-500/30 hover:border-yellow-500/50"
+                            : "border-red-500/30 hover:border-red-500/50"
                         }`}
                       >
-                        <CardContent className="p-6">
-                          <div className="flex items-center space-x-4 mb-4">
+                        <CardContent className="p-4 sm:p-6">
+                          <div className="flex items-start space-x-3 sm:space-x-4 mb-4">
                             <div
-                              className={`p-3 rounded-lg ${
+                              className={`p-3 rounded-lg flex-shrink-0 ${
                                 isStrong
-                                  ? "bg-green-500/20"
+                                  ? "bg-emerald-500/20"
                                   : isModerate
                                   ? "bg-yellow-500/20"
                                   : "bg-red-500/20"
@@ -425,24 +617,24 @@ export function PublicBusinessProfile({
                               <IconComponent
                                 className={`h-6 w-6 ${
                                   isStrong
-                                    ? "text-green-600 dark:text-green-400"
+                                    ? "text-emerald-400"
                                     : isModerate
-                                    ? "text-yellow-600 dark:text-yellow-400"
-                                    : "text-red-600 dark:text-red-400"
+                                    ? "text-yellow-400"
+                                    : "text-red-400"
                                 }`}
                               />
                             </div>
-                            <div>
-                              <h3 className="font-semibold text-gray-900 dark:text-white">
+                            <div className="flex-1 min-w-0">
+                              <h3 className="font-semibold text-white text-base sm:text-lg mb-3">
                                 {item.title}
                               </h3>
                               <Badge
-                                className={`mt-1 ${
+                                className={`text-xs mb-3 inline-block ${
                                   isStrong
-                                    ? "bg-green-500/20 text-green-700 dark:text-green-400 border-green-500/30"
+                                    ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
                                     : isModerate
-                                    ? "bg-yellow-500/20 text-yellow-700 dark:text-yellow-400 border-yellow-500/30"
-                                    : "bg-red-500/20 text-red-700 dark:text-red-400 border-red-500/30"
+                                    ? "bg-yellow-500/20 text-yellow-300 border-yellow-500/30"
+                                    : "bg-red-500/20 text-red-300 border-red-500/30"
                                 }`}
                               >
                                 {item.status === "strong"
@@ -453,12 +645,24 @@ export function PublicBusinessProfile({
                               </Badge>
                             </div>
                           </div>
-                          <p className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-                            {item.description}
-                          </p>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">
-                            {item.details}
-                          </p>
+                          <div className="space-y-3">
+                            <div>
+                              <h4 className="text-sm font-medium text-white mb-1">
+                                Status
+                              </h4>
+                              <p className="text-sm text-gray-300 leading-relaxed">
+                                {item.description}
+                              </p>
+                            </div>
+                            <div>
+                              <h4 className="text-sm font-medium text-white mb-1">
+                                Details
+                              </h4>
+                              <p className="text-sm text-gray-400 leading-relaxed">
+                                {item.details}
+                              </p>
+                            </div>
+                          </div>
                         </CardContent>
                       </Card>
                     );
@@ -468,64 +672,66 @@ export function PublicBusinessProfile({
 
               {/* Document Snapshot */}
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+                <h2 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">
                   Verified Documents
                 </h2>
-                <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700">
-                  <CardHeader>
-                    <CardTitle className="text-gray-900 dark:text-white flex items-center justify-between">
-                      <span>Document Verification Status</span>
+                <Card className="bg-gray-900/60 border-gray-700/50 backdrop-blur-sm">
+                  <CardHeader className="p-4 sm:p-6">
+                    <CardTitle className="text-white flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
+                      <span className="text-lg sm:text-xl">
+                        Document Verification Status
+                      </span>
                       <Badge
                         variant="outline"
-                        className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300"
+                        className="border-gray-600 text-gray-300 self-start sm:self-auto"
                       >
                         {finalVerifiedDocuments.length} of{" "}
                         {finalBusinessStats.documentsVerified} shown
                       </Badge>
                     </CardTitle>
-                    <CardDescription className="text-gray-600 dark:text-gray-400">
+                    <CardDescription className="text-sm sm:text-base text-gray-400">
                       Key documents verified by Lunoa&apos;s verification
                       process
                     </CardDescription>
                   </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
+                  <CardContent className="p-4 sm:p-6 pt-0">
+                    <div className="space-y-3 sm:space-y-4">
                       {finalVerifiedDocuments.map((doc, index) => (
                         <div
                           key={index}
-                          className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg"
+                          className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0 p-3 sm:p-4 bg-gray-800/40 rounded-lg hover:bg-gray-800/60 transition-all duration-300"
                         >
-                          <div className="flex items-center space-x-4">
-                            <div className="p-2 bg-green-500/20 rounded-lg">
-                              <FileText className="h-5 w-5 text-green-600 dark:text-green-400" />
+                          <div className="flex items-start sm:items-center space-x-3 sm:space-x-4 min-w-0 flex-1">
+                            <div className="p-2 bg-emerald-500/20 rounded-lg flex-shrink-0">
+                              <FileText className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-400" />
                             </div>
-                            <div>
-                              <p className="font-medium text-gray-900 dark:text-white">
+                            <div className="min-w-0 flex-1">
+                              <p className="font-medium text-white text-sm sm:text-base truncate">
                                 {doc.type}
                               </p>
-                              <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+                              <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-gray-400">
                                 <Badge
                                   variant="outline"
-                                  className="text-xs border-gray-300 dark:border-gray-600"
+                                  className="text-xs border-gray-600 text-gray-300"
                                 >
                                   {doc.category}
                                 </Badge>
-                                <span>•</span>
+                                <span className="hidden sm:inline">•</span>
                                 <span>{doc.date}</span>
                               </div>
                             </div>
                           </div>
-                          <Badge className="bg-green-500/20 text-green-700 dark:text-green-400 border-green-500/30">
+                          <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-500/30 self-start sm:self-auto">
                             <CheckCircle className="h-3 w-3 mr-1" />
                             {doc.status}
                           </Badge>
                         </div>
                       ))}
                     </div>
-                    <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <div className="mt-4 sm:mt-6 pt-4 border-t border-gray-700">
                       <Button
                         variant="outline"
-                        className="w-full border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                        className="w-full border-gray-600 text-gray-800 hover:bg-gray-800/40 text-sm sm:text-base"
                         onClick={handleViewFullDocuments}
                       >
                         <ExternalLink className="h-4 w-4 mr-2" />
@@ -538,45 +744,45 @@ export function PublicBusinessProfile({
             </div>
 
             {/* Sidebar */}
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {/* Business Stats */}
-              <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700">
-                <CardHeader>
-                  <CardTitle className="text-gray-900 dark:text-white">
+              <Card className="bg-gray-900/60 border-gray-700/50 backdrop-blur-sm">
+                <CardHeader className="p-4 sm:p-6">
+                  <CardTitle className="text-white text-lg sm:text-xl">
                     Business Overview
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
+                <CardContent className="p-4 sm:p-6 pt-0">
+                  <div className="space-y-3 sm:space-y-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">
+                      <span className="text-sm sm:text-base text-gray-400">
                         Years Active
                       </span>
-                      <span className="font-semibold text-gray-900 dark:text-white">
+                      <span className="font-semibold text-white text-sm sm:text-base">
                         {finalBusinessStats.yearsActive} years
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">
+                      <span className="text-sm sm:text-base text-gray-400">
                         Documents Verified
                       </span>
-                      <span className="font-semibold text-gray-900 dark:text-white">
+                      <span className="font-semibold text-white text-sm sm:text-base">
                         {finalBusinessStats.documentsVerified}
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">
+                      <span className="text-sm sm:text-base text-gray-400">
                         Partner References
                       </span>
-                      <span className="font-semibold text-gray-900 dark:text-white">
+                      <span className="font-semibold text-white text-sm sm:text-base">
                         {finalBusinessStats.partnerReferences}
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">
+                      <span className="text-sm sm:text-base text-gray-400">
                         Last Updated
                       </span>
-                      <span className="font-semibold text-gray-900 dark:text-white">
+                      <span className="font-semibold text-white text-sm sm:text-base">
                         {finalBusinessStats.lastUpdated}
                       </span>
                     </div>
@@ -586,18 +792,18 @@ export function PublicBusinessProfile({
 
               {/* Call to Action */}
               {showContactButtons && (
-                <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700">
-                  <CardHeader>
-                    <CardTitle className="text-gray-900 dark:text-white">
+                <Card className="bg-gray-900/60 border-gray-700/50 backdrop-blur-sm">
+                  <CardHeader className="p-4 sm:p-6">
+                    <CardTitle className="text-white text-lg sm:text-xl">
                       Get in Touch
                     </CardTitle>
-                    <CardDescription className="text-gray-600 dark:text-gray-400">
+                    <CardDescription className="text-sm sm:text-base text-gray-400">
                       Connect with this verified business
                     </CardDescription>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-3 sm:space-y-4 p-4 sm:p-6 pt-0">
                     <Button
-                      className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white"
+                      className="w-full bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white text-sm sm:text-base"
                       onClick={handleContactBusiness}
                     >
                       <Mail className="h-4 w-4 mr-2" />
@@ -609,35 +815,37 @@ export function PublicBusinessProfile({
                         <Button
                           variant="outline"
                           size="sm"
-                          className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300"
+                          className="border-gray-600 text-gray-800 text-xs sm:text-sm hover:bg-gray-800/40"
                           onClick={handleCallBusiness}
                         >
-                          <Phone className="h-4 w-4 mr-1" />
-                          Call
+                          <Phone className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                          <span className="hidden sm:inline">Call</span>
+                          <span className="sm:hidden">📞</span>
                         </Button>
                       )}
                       {finalContactInfo.website && (
                         <Button
                           variant="outline"
                           size="sm"
-                          className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300"
+                          className="border-gray-600 text-gray-800 text-xs sm:text-sm hover:bg-gray-800/40"
                           onClick={handleVisitWebsite}
                         >
-                          <Globe className="h-4 w-4 mr-1" />
-                          Website
+                          <Globe className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                          <span className="hidden sm:inline">Website</span>
+                          <span className="sm:hidden">🌐</span>
                         </Button>
                       )}
                     </div>
 
                     {showReportButton && (
-                      <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                      <div className="pt-3 sm:pt-4 border-t border-gray-700">
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="w-full text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                          className="w-full text-gray-500 hover:text-gray-300 text-xs sm:text-sm hover:bg-gray-800/40"
                           onClick={handleReportIssue}
                         >
-                          <Flag className="h-4 w-4 mr-2" />
+                          <Flag className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                           Report an Issue
                         </Button>
                       </div>
@@ -647,19 +855,19 @@ export function PublicBusinessProfile({
               )}
 
               {/* Verification Badge */}
-              <Card className="bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-950/20 dark:to-blue-950/20 border-green-200 dark:border-green-800">
-                <CardContent className="p-6 text-center">
-                  <div className="w-16 h-16 bg-green-500/20 rounded-full mx-auto mb-4 flex items-center justify-center">
-                    <Shield className="h-8 w-8 text-green-600 dark:text-green-400" />
+              <Card className="bg-gradient-to-br from-emerald-600/20 to-green-700/20 border-emerald-500/30 backdrop-blur-sm">
+                <CardContent className="p-4 sm:p-6 text-center">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-emerald-500/20 rounded-full mx-auto mb-3 sm:mb-4 flex items-center justify-center">
+                    <Shield className="h-6 w-6 sm:h-8 sm:w-8 text-emerald-300" />
                   </div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
+                  <h3 className="font-semibold text-white mb-2 text-base sm:text-lg">
                     Lunoa Verified
                   </h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                  <p className="text-xs sm:text-sm text-emerald-100 mb-3 sm:mb-4">
                     This business profile has been verified through our
                     comprehensive document validation process.
                   </p>
-                  <Badge className="bg-green-500/20 text-green-700 dark:text-green-400 border-green-500/30">
+                  <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-500/30 text-xs sm:text-sm">
                     <CheckCircle className="h-3 w-3 mr-1" />
                     Trusted Partner
                   </Badge>
