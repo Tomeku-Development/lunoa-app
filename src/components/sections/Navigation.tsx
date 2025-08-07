@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import { useState } from "react";
 import {
   Search,
   Users,
@@ -8,6 +9,8 @@ import {
   UserPlus,
   LogOut,
   User,
+  Menu,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,17 +27,24 @@ interface NavigationProps {
 }
 
 export function Navigation({ activeTab, onTabChange }: NavigationProps) {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   const tabs = [
     { id: "dashboard", label: "Dashboard", icon: TrendingUp },
     { id: "discover", label: "Discover", icon: Search },
     { id: "verify-partner", label: "Verify Partner", icon: UserPlus },
   ];
 
+  const handleTabClick = (tabId: string) => {
+    onTabChange(tabId);
+    setIsMobileMenuOpen(false);
+  };
+
   return (
     <nav className="bg-gray-900 border-b border-gray-700">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <div className="flex items-center space-x-8">
+          <div className="flex items-center space-x-4 sm:space-x-8">
             <div className="flex items-center space-x-1">
               <Image
                 src="/logo.svg"
@@ -43,10 +53,13 @@ export function Navigation({ activeTab, onTabChange }: NavigationProps) {
                 height={24}
                 className="rounded-full"
               />
-              <span className="text-2xl font-bold text-gray-300">Lunoa</span>
+              <span className="text-xl sm:text-2xl font-bold text-gray-300">
+                Lunoa
+              </span>
             </div>
 
-            <div className="flex space-x-1">
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex space-x-1">
               {tabs.map((tab) => {
                 const IconComponent = tab.icon;
                 return (
@@ -61,14 +74,15 @@ export function Navigation({ activeTab, onTabChange }: NavigationProps) {
                     }`}
                   >
                     <IconComponent className="h-4 w-4" />
-                    <span>{tab.label}</span>
+                    <span className="hidden lg:block">{tab.label}</span>
                   </Button>
                 );
               })}
             </div>
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 sm:space-x-4">
+            {/* User Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -105,8 +119,47 @@ export function Navigation({ activeTab, onTabChange }: NavigationProps) {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+
+            {/* Mobile Menu Button */}
+            <Button
+              variant="ghost"
+              className="md:hidden w-8 h-8 p-0 hover:bg-gray-800"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? (
+                <X className="h-5 w-5 text-gray-300" />
+              ) : (
+                <Menu className="h-5 w-5 text-gray-300" />
+              )}
+            </Button>
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden border-t border-gray-700">
+            <div className="px-2 pt-2 pb-3 space-y-1">
+              {tabs.map((tab) => {
+                const IconComponent = tab.icon;
+                return (
+                  <Button
+                    key={tab.id}
+                    variant={activeTab === tab.id ? "default" : "ghost"}
+                    onClick={() => handleTabClick(tab.id)}
+                    className={`w-full justify-start flex items-center space-x-2 ${
+                      activeTab === tab.id
+                        ? "bg-green-600 text-white hover:bg-green-700"
+                        : "text-gray-300 hover:text-white hover:bg-gray-800"
+                    }`}
+                  >
+                    <IconComponent className="h-4 w-4" />
+                    <span>{tab.label}</span>
+                  </Button>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   );
