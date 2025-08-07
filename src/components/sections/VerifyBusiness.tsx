@@ -8,6 +8,9 @@ import {
   Star,
   Shield,
   Users,
+  Copy,
+  Check,
+  Link,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -18,49 +21,76 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useState } from "react";
 
 export default function VerifyBusinessPartner() {
+  const [generatedLink, setGeneratedLink] = useState<string>("");
+  const [copied, setCopied] = useState(false);
+
+  const generateReferralLink = () => {
+    // Generate a unique referral code
+    const referralCode =
+      Math.random().toString(36).substring(2, 15) +
+      Math.random().toString(36).substring(2, 15);
+    const link = `${window.location.origin}/signup?ref=${referralCode}`;
+    setGeneratedLink(link);
+  };
+
+  const copyToClipboard = async () => {
+    if (generatedLink) {
+      await navigator.clipboard.writeText(generatedLink);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
   const handleInvitePartner = () => {
-    window.location.href = "/signup";
+    if (!generatedLink) {
+      generateReferralLink();
+    } else {
+      copyToClipboard();
+    }
   };
 
   const benefits = [
     {
-      icon: Gift,
-      title: "$50 Reward",
-      description:
-        "Earn $50 for each business that completes verification through your referral",
-    },
-    {
       icon: Shield,
-      title: "Build Trust Network",
+      title: "Enhanced Trust",
       description:
-        "Help create a more trustworthy business ecosystem for everyone",
+        "Help businesses build credibility through verified profiles and documentation",
     },
     {
       icon: Users,
-      title: "Strengthen Partnerships",
+      title: "Stronger Network",
       description:
         "Connect with verified businesses and build stronger professional relationships",
+    },
+    {
+      icon: CheckCircle,
+      title: "Quality Assurance",
+      description:
+        "Ensure all partners meet high standards of business verification",
     },
   ];
 
   const steps = [
     {
       number: "1",
-      title: "Share the Link",
-      description: "Send the signup link to businesses you want to verify",
+      title: "Invite Businesses",
+      description:
+        "Send the signup link to businesses you want to add to the network",
     },
     {
       number: "2",
-      title: "They Complete Verification",
+      title: "Verification Process",
       description:
-        "The business uploads documents and completes their trust profile",
+        "The business uploads documents and completes their verification profile",
     },
     {
       number: "3",
-      title: "Earn Your Reward",
-      description: "Once verified, you receive $50 credited to your account",
+      title: "Join Network",
+      description:
+        "Once verified, they become part of your trusted business network",
     },
   ];
 
@@ -73,13 +103,86 @@ export default function VerifyBusinessPartner() {
             <UserPlus className="h-8 w-8 text-white" />
           </div>
           <h1 className="text-4xl font-bold text-white mb-4">
-            Invite Business Partners
+            Add Business Partners
           </h1>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Help other businesses get verified on Lunoa and earn rewards while
-            building a stronger trust network.
+            Invite other businesses to get verified on Lunoa and build a
+            stronger, more trustworthy business network together.
           </p>
         </div>
+
+        {/* CTA Section */}
+        <Card className="bg-gradient-to-br from-green-600 to-green-700 border-green-500 mb-8">
+          <CardContent className="p-8 text-center">
+            <h2 className="text-2xl font-bold text-white mb-4">
+              Ready to Expand Your Network?
+            </h2>
+            <p className="text-green-100 mb-6 max-w-md mx-auto">
+              Generate your custom referral link and share it with businesses
+              you know to help them join our verified business community.
+            </p>
+
+            {!generatedLink ? (
+              <Button
+                onClick={handleInvitePartner}
+                className="bg-white text-green-700 hover:bg-green-50 px-8 py-3 text-lg font-semibold"
+              >
+                <Link className="h-5 w-5 mr-2" />
+                Generate Referral Link
+              </Button>
+            ) : (
+              <div className="space-y-4">
+                <div className="bg-white/10 rounded-lg p-4 max-w-lg mx-auto">
+                  <p className="text-white text-sm mb-2">
+                    Your custom referral link:
+                  </p>
+                  <div className="flex items-center space-x-2 bg-white/20 rounded-md p-2">
+                    <code className="text-green-100 text-sm flex-1 truncate">
+                      {generatedLink}
+                    </code>
+                    <Button
+                      onClick={copyToClipboard}
+                      variant="ghost"
+                      size="sm"
+                      className="text-white hover:bg-white/20"
+                    >
+                      {copied ? (
+                        <Check className="h-4 w-4" />
+                      ) : (
+                        <Copy className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                </div>
+                <div className="flex space-x-3 justify-center">
+                  <Button
+                    onClick={copyToClipboard}
+                    className="bg-white text-green-700 hover:bg-green-50"
+                  >
+                    {copied ? (
+                      <Check className="h-4 w-4 mr-2" />
+                    ) : (
+                      <Copy className="h-4 w-4 mr-2" />
+                    )}
+                    {copied ? "Copied!" : "Copy Link"}
+                  </Button>
+                  <Button
+                    onClick={generateReferralLink}
+                    variant="outline"
+                    className="border-white text-white hover:bg-white/10"
+                  >
+                    <Link className="h-4 w-4 mr-2" />
+                    Generate New Link
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            <p className="text-green-200 text-sm mt-4">
+              Track referrals • Build trust • Grow your network
+            </p>
+          </CardContent>
+        </Card>
 
         {/* Benefits Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
@@ -109,7 +212,7 @@ export default function VerifyBusinessPartner() {
           <CardHeader className="text-center">
             <CardTitle className="text-2xl text-white">How It Works</CardTitle>
             <CardDescription className="text-gray-400">
-              Simple 3-step process to start earning rewards
+              Simple 3-step process to expand your verified network
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -134,38 +237,15 @@ export default function VerifyBusinessPartner() {
           </CardContent>
         </Card>
 
-        {/* CTA Section */}
-        <Card className="bg-gradient-to-br from-green-600 to-green-700 border-green-500">
-          <CardContent className="p-8 text-center">
-            <h2 className="text-2xl font-bold text-white mb-4">
-              Ready to Start Earning?
-            </h2>
-            <p className="text-green-100 mb-6 max-w-md mx-auto">
-              Share the Lunoa signup link with businesses you know and start
-              earning $50 for each successful verification.
-            </p>
-            <Button
-              onClick={handleInvitePartner}
-              className="bg-white text-green-700 hover:bg-green-50 px-8 py-3 text-lg font-semibold"
-            >
-              <UserPlus className="h-5 w-5 mr-2" />
-              Invite Business Partners
-            </Button>
-            <p className="text-green-200 text-sm mt-4">
-              No limit on referrals • Instant rewards • Build your network
-            </p>
-          </CardContent>
-        </Card>
-
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
           <div className="text-center">
             <div className="text-3xl font-bold text-green-400 mb-2">500+</div>
-            <div className="text-gray-400">Businesses Verified</div>
+            <div className="text-gray-400">Verified Businesses</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-bold text-green-400 mb-2">$25K+</div>
-            <div className="text-gray-400">Rewards Paid Out</div>
+            <div className="text-3xl font-bold text-green-400 mb-2">95%</div>
+            <div className="text-gray-400">Verification Success Rate</div>
           </div>
           <div className="text-center">
             <div className="text-3xl font-bold text-green-400 mb-2">4.9★</div>

@@ -107,14 +107,14 @@ export function Settings({
 
   // Merge props with defaults
   const defaultProfile: BusinessProfile = {
-    businessName: "Akhtar Industries",
-    industry: "manufacturing",
+    businessName: "Tomeku Trading Corp",
+    industry: "import-export",
     description:
-      "Leading industrial manufacturing company with over 25 years of experience in automotive and aerospace components.",
-    website: "www.akhtarindustries.com",
-    phone: "+1 (555) 123-4567",
-    address: "123 Industrial Blvd, Detroit, MI 48201",
-    email: "john@akhtarindustries.com",
+      "Leading import-export company specializing in consumer electronics and automotive parts distribution across Metro Manila and Luzon regions.",
+    website: "www.tomeku.com.ph",
+    phone: "+63 917 123 4567",
+    address: "Unit 1205 Eastwood Tower, Quezon City, Metro Manila 1110",
+    email: "admin@tomeku.com.ph",
     ...initialProfile,
   };
 
@@ -140,26 +140,26 @@ export function Settings({
 
   const defaultBilling: BillingInfo = {
     plan: {
-      name: "Pro Plan",
-      price: "$49/month",
+      name: "Pro Trust Plan",
+      price: "₱2,499/month",
       status: "Active",
     },
     paymentMethod: {
-      last4: "4242",
+      last4: "1234",
       expiryDate: "12/25",
     },
     billingHistory: [
       {
-        month: "December 2023",
-        amount: "$49.00",
+        month: "August 2025",
+        amount: "₱2,499.00",
         status: "Paid",
-        plan: "Pro Plan",
+        plan: "Pro Trust Plan",
       },
       {
-        month: "November 2023",
-        amount: "$49.00",
+        month: "June 2025",
+        amount: "₱2,499.00",
         status: "Paid",
-        plan: "Pro Plan",
+        plan: "Pro Trust Plan",
       },
     ],
     ...billingInfo,
@@ -224,28 +224,28 @@ export function Settings({
           <TabsList className="bg-gray-900 border-gray-700">
             <TabsTrigger
               value="profile"
-              className="data-[state=active]:bg-gray-800 data-[state=active]:text-white"
+              className="text-grey-100 data-[state=active]:bg-gray-800 data-[state=active]:text-white"
             >
               <User className="h-4 w-4 mr-2" />
               Profile
             </TabsTrigger>
             <TabsTrigger
               value="notifications"
-              className="data-[state=active]:bg-gray-800 data-[state=active]:text-white"
+              className="text-grey-100 data-[state=active]:bg-gray-800 data-[state=active]:text-white"
             >
               <Bell className="h-4 w-4 mr-2" />
               Notifications
             </TabsTrigger>
             <TabsTrigger
               value="privacy"
-              className="data-[state=active]:bg-gray-800 data-[state=active]:text-white"
+              className="text-grey-100 data-[state=active]:bg-gray-800 data-[state=active]:text-white"
             >
               <Shield className="h-4 w-4 mr-2" />
               Privacy
             </TabsTrigger>
             <TabsTrigger
               value="billing"
-              className="data-[state=active]:bg-gray-800 data-[state=active]:text-white"
+              className="text-grey-100 data-[state=active]:bg-gray-800 data-[state=active]:text-white"
             >
               <CreditCard className="h-4 w-4 mr-2" />
               Billing
@@ -281,12 +281,38 @@ export function Settings({
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="bg-gray-800 border-gray-600">
+                        <SelectItem value="food-processing">
+                          Food Processing
+                        </SelectItem>
                         <SelectItem value="manufacturing">
                           Manufacturing
                         </SelectItem>
-                        <SelectItem value="technology">Technology</SelectItem>
-                        <SelectItem value="finance">Finance</SelectItem>
-                        <SelectItem value="healthcare">Healthcare</SelectItem>
+                        <SelectItem value="digital-services">
+                          Digital Services
+                        </SelectItem>
+                        <SelectItem value="agriculture">Agriculture</SelectItem>
+                        <SelectItem value="textiles-garments">
+                          Textiles & Garments
+                        </SelectItem>
+                        <SelectItem value="handicrafts">Handicrafts</SelectItem>
+                        <SelectItem value="tourism-hospitality">
+                          Tourism & Hospitality
+                        </SelectItem>
+                        <SelectItem value="information-technology">
+                          Information Technology
+                        </SelectItem>
+                        <SelectItem value="import-export">
+                          Import/Export
+                        </SelectItem>
+                        <SelectItem value="retail-trade">
+                          Retail Trade
+                        </SelectItem>
+                        <SelectItem value="construction">
+                          Construction
+                        </SelectItem>
+                        <SelectItem value="healthcare-services">
+                          Healthcare Services
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -466,7 +492,7 @@ export function Settings({
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
                       <span className="text-gray-300">
-                        Partnership requests
+                        Partnership connection requests
                       </span>
                       <Switch
                         defaultChecked={
@@ -476,26 +502,30 @@ export function Settings({
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-gray-300">
-                        Document verification updates
+                        Document verification status updates
                       </span>
                       <Switch
                         defaultChecked={defaultNotifications.documentUpdates}
                       />
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-300">Trust score changes</span>
+                      <span className="text-gray-300">Trust grade changes</span>
                       <Switch
                         defaultChecked={defaultNotifications.trustScoreChanges}
                       />
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-300">New reviews</span>
+                      <span className="text-gray-300">
+                        New business reviews
+                      </span>
                       <Switch
                         defaultChecked={defaultNotifications.newReviews}
                       />
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-300">Marketing updates</span>
+                      <span className="text-gray-300">
+                        Platform updates & announcements
+                      </span>
                       <Switch
                         defaultChecked={defaultNotifications.marketingUpdates}
                       />
@@ -564,13 +594,17 @@ export function Settings({
                       />
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-300">Employee count</span>
+                      <span className="text-gray-300">
+                        Company size/employee count
+                      </span>
                       <Switch
                         defaultChecked={defaultPrivacy.showEmployeeCount}
                       />
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-300">Revenue information</span>
+                      <span className="text-gray-300">
+                        Financial information
+                      </span>
                       <Switch defaultChecked={defaultPrivacy.showRevenueInfo} />
                     </div>
                   </div>
