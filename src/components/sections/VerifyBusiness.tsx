@@ -8,6 +8,9 @@ import {
   Star,
   Shield,
   Users,
+  Copy,
+  Check,
+  Link,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -18,10 +21,35 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useState } from "react";
 
 export default function VerifyBusinessPartner() {
+  const [generatedLink, setGeneratedLink] = useState<string>("");
+  const [copied, setCopied] = useState(false);
+
+  const generateReferralLink = () => {
+    // Generate a unique referral code
+    const referralCode =
+      Math.random().toString(36).substring(2, 15) +
+      Math.random().toString(36).substring(2, 15);
+    const link = `${window.location.origin}/signup?ref=${referralCode}`;
+    setGeneratedLink(link);
+  };
+
+  const copyToClipboard = async () => {
+    if (generatedLink) {
+      await navigator.clipboard.writeText(generatedLink);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
   const handleInvitePartner = () => {
-    window.location.href = "/signup";
+    if (!generatedLink) {
+      generateReferralLink();
+    } else {
+      copyToClipboard();
+    }
   };
 
   const benefits = [
@@ -143,18 +171,68 @@ export default function VerifyBusinessPartner() {
               Ready to Expand Your Network?
             </h2>
             <p className="text-green-100 mb-6 max-w-md mx-auto">
-              Share the Lunoa signup link with businesses you know and help them
-              join our verified business community.
+              Generate your custom referral link and share it with businesses
+              you know to help them join our verified business community.
             </p>
-            <Button
-              onClick={handleInvitePartner}
-              className="bg-white text-green-700 hover:bg-green-50 px-8 py-3 text-lg font-semibold"
-            >
-              <UserPlus className="h-5 w-5 mr-2" />
-              Add Business Partners
-            </Button>
+
+            {!generatedLink ? (
+              <Button
+                onClick={handleInvitePartner}
+                className="bg-white text-green-700 hover:bg-green-50 px-8 py-3 text-lg font-semibold"
+              >
+                <Link className="h-5 w-5 mr-2" />
+                Generate Referral Link
+              </Button>
+            ) : (
+              <div className="space-y-4">
+                <div className="bg-white/10 rounded-lg p-4 max-w-lg mx-auto">
+                  <p className="text-white text-sm mb-2">
+                    Your custom referral link:
+                  </p>
+                  <div className="flex items-center space-x-2 bg-white/20 rounded-md p-2">
+                    <code className="text-green-100 text-sm flex-1 truncate">
+                      {generatedLink}
+                    </code>
+                    <Button
+                      onClick={copyToClipboard}
+                      variant="ghost"
+                      size="sm"
+                      className="text-white hover:bg-white/20"
+                    >
+                      {copied ? (
+                        <Check className="h-4 w-4" />
+                      ) : (
+                        <Copy className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                </div>
+                <div className="flex space-x-3 justify-center">
+                  <Button
+                    onClick={copyToClipboard}
+                    className="bg-white text-green-700 hover:bg-green-50"
+                  >
+                    {copied ? (
+                      <Check className="h-4 w-4 mr-2" />
+                    ) : (
+                      <Copy className="h-4 w-4 mr-2" />
+                    )}
+                    {copied ? "Copied!" : "Copy Link"}
+                  </Button>
+                  <Button
+                    onClick={generateReferralLink}
+                    variant="outline"
+                    className="border-white text-white hover:bg-white/10"
+                  >
+                    <Link className="h-4 w-4 mr-2" />
+                    Generate New Link
+                  </Button>
+                </div>
+              </div>
+            )}
+
             <p className="text-green-200 text-sm mt-4">
-              No limit on invitations • Build trust • Grow your network
+              Track referrals • Build trust • Grow your network
             </p>
           </CardContent>
         </Card>
