@@ -111,61 +111,8 @@ export default function VerifyBusinessPartner() {
           </p>
         </div>
 
-        {/* Benefits Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          {benefits.map((benefit, index) => {
-            const IconComponent = benefit.icon;
-            return (
-              <Card
-                key={index}
-                className="bg-gray-900 border-gray-700 text-center"
-              >
-                <CardContent className="p-6">
-                  <div className="w-12 h-12 bg-green-500/20 rounded-lg mx-auto mb-4 flex items-center justify-center">
-                    <IconComponent className="h-6 w-6 text-green-400" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-white mb-2">
-                    {benefit.title}
-                  </h3>
-                  <p className="text-gray-400 text-sm">{benefit.description}</p>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-
-        {/* How It Works */}
-        <Card className="bg-gray-900 border-gray-700 mb-8">
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl text-white">How It Works</CardTitle>
-            <CardDescription className="text-gray-400">
-              Simple 3-step process to expand your verified network
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {steps.map((step, index) => (
-                <div key={index} className="text-center">
-                  <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full mx-auto mb-4 flex items-center justify-center">
-                    <span className="text-white font-bold text-lg">
-                      {step.number}
-                    </span>
-                  </div>
-                  <h3 className="text-lg font-semibold text-white mb-2">
-                    {step.title}
-                  </h3>
-                  <p className="text-gray-400 text-sm">{step.description}</p>
-                  {index < steps.length - 1 && (
-                    <ArrowRight className="h-5 w-5 text-gray-600 mx-auto mt-4 hidden md:block" />
-                  )}
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
         {/* CTA Section */}
-        <Card className="bg-gradient-to-br from-green-600 to-green-700 border-green-500">
+        <Card className="bg-gradient-to-br from-green-600 to-green-700 border-green-500 mb-8">
           <CardContent className="p-8 text-center">
             <h2 className="text-2xl font-bold text-white mb-4">
               Ready to Expand Your Network?
@@ -234,6 +181,59 @@ export default function VerifyBusinessPartner() {
             <p className="text-green-200 text-sm mt-4">
               Track referrals • Build trust • Grow your network
             </p>
+          </CardContent>
+        </Card>
+
+        {/* Benefits Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          {benefits.map((benefit, index) => {
+            const IconComponent = benefit.icon;
+            return (
+              <Card
+                key={index}
+                className="bg-gray-900 border-gray-700 text-center"
+              >
+                <CardContent className="p-6">
+                  <div className="w-12 h-12 bg-green-500/20 rounded-lg mx-auto mb-4 flex items-center justify-center">
+                    <IconComponent className="h-6 w-6 text-green-400" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-white mb-2">
+                    {benefit.title}
+                  </h3>
+                  <p className="text-gray-400 text-sm">{benefit.description}</p>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+
+        {/* How It Works */}
+        <Card className="bg-gray-900 border-gray-700 mb-8">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl text-white">How It Works</CardTitle>
+            <CardDescription className="text-gray-400">
+              Simple 3-step process to expand your verified network
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {steps.map((step, index) => (
+                <div key={index} className="text-center">
+                  <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full mx-auto mb-4 flex items-center justify-center">
+                    <span className="text-white font-bold text-lg">
+                      {step.number}
+                    </span>
+                  </div>
+                  <h3 className="text-lg font-semibold text-white mb-2">
+                    {step.title}
+                  </h3>
+                  <p className="text-gray-400 text-sm">{step.description}</p>
+                  {index < steps.length - 1 && (
+                    <ArrowRight className="h-5 w-5 text-gray-600 mx-auto mt-4 hidden md:block" />
+                  )}
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
 
