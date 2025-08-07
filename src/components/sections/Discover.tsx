@@ -3,6 +3,7 @@
 // Import React hooks, UI components, icons, and mock data.
 
 import { useState } from "react"; // React hook for state management.
+import { useRouter } from "next/navigation"; // Next.js router for navigation
 import {
   Search,
   Filter,
@@ -33,11 +34,14 @@ import { TrustGradeMeter } from "@/components/trust-grade-meter";
 
 // Mock data for demonstration purposes. In a real application, this would come from an API.
 import { businesses, industries, locations } from "@/mock/mock";
+import { createBusinessSlug } from "@/lib/utils";
 
 // SECTION 2: Component Definition
 // =================================================================================================
 
 export function Discover() {
+  const router = useRouter(); // Initialize Next.js router
+
   // SECTION 2.1: State Management
   // -----------------------------------------------------------------------------------------------
   // State variables to store user input for searching and filtering.
@@ -75,11 +79,11 @@ export function Discover() {
 
   /**
    * Handles the "View Profile" button click.
-   * @param {number} businessId - The ID of the business to view.
+   * @param {string} businessName - The name of the business to view.
    */
-  const handleViewProfile = (businessId: number) => {
-    console.log("View profile for business:", businessId);
-    // TODO: Implement navigation to the business profile page, e.g., router.push(`/business/${businessId}`);
+  const handleViewProfile = (businessName: string) => {
+    const slug = createBusinessSlug(businessName);
+    router.push(`/business/${slug}`);
   };
 
   /**
@@ -275,7 +279,7 @@ export function Discover() {
                     variant="outline"
                     size="sm"
                     className="flex-1 border-gray-600 text-gray-800 hover:bg-gray-700"
-                    onClick={() => handleViewProfile(business.id)}
+                    onClick={() => handleViewProfile(business.name)}
                   >
                     <Eye className="h-4 w-4 mr-2" />
                     View Profile
