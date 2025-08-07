@@ -6,8 +6,6 @@ import {
   Bell,
   Shield,
   CreditCard,
-  Building,
-  Globe,
   Save,
   Eye,
   EyeOff,
@@ -34,22 +32,182 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-export function Settings() {
+interface BusinessProfile {
+  businessName: string;
+  industry: string;
+  description: string;
+  website: string;
+  phone: string;
+  address: string;
+  email: string;
+}
+
+interface NotificationSettings {
+  emailNotifications: boolean;
+  pushNotifications: boolean;
+  partnershipRequests: boolean;
+  documentUpdates: boolean;
+  trustScoreChanges: boolean;
+  newReviews: boolean;
+  marketingUpdates: boolean;
+}
+
+interface PrivacySettings {
+  profileVisibility: "public" | "verified" | "private";
+  showContactInfo: boolean;
+  showBusinessAddress: boolean;
+  showEmployeeCount: boolean;
+  showRevenueInfo: boolean;
+}
+
+interface BillingInfo {
+  plan: {
+    name: string;
+    price: string;
+    status: string;
+  };
+  paymentMethod: {
+    last4: string;
+    expiryDate: string;
+  };
+  billingHistory: Array<{
+    month: string;
+    amount: string;
+    status: string;
+    plan: string;
+  }>;
+}
+
+interface SettingsProps {
+  initialProfile?: Partial<BusinessProfile>;
+  initialNotifications?: Partial<NotificationSettings>;
+  initialPrivacy?: Partial<PrivacySettings>;
+  billingInfo?: BillingInfo;
+  onSaveProfile?: (profile: BusinessProfile) => void;
+  onSaveNotifications?: (notifications: NotificationSettings) => void;
+  onSavePrivacy?: (privacy: PrivacySettings) => void;
+  onUpdatePassword?: (passwords: {
+    current: string;
+    new: string;
+    confirm: string;
+  }) => void;
+}
+
+export function Settings({
+  initialProfile = {},
+  initialNotifications = {},
+  initialPrivacy = {},
+  billingInfo,
+  onSaveProfile,
+  onSaveNotifications,
+  onSavePrivacy,
+  onUpdatePassword,
+}: SettingsProps) {
   const [showPassword, setShowPassword] = useState(false);
-  const [emailNotifications, setEmailNotifications] = useState(true);
-  const [pushNotifications, setPushNotifications] = useState(false);
-  const [profileVisibility, setProfileVisibility] = useState("public");
+
+  // Merge props with defaults
+  const defaultProfile: BusinessProfile = {
+    businessName: "Akhtar Industries",
+    industry: "manufacturing",
+    description:
+      "Leading industrial manufacturing company with over 25 years of experience in automotive and aerospace components.",
+    website: "www.akhtarindustries.com",
+    phone: "+1 (555) 123-4567",
+    address: "123 Industrial Blvd, Detroit, MI 48201",
+    email: "john@akhtarindustries.com",
+    ...initialProfile,
+  };
+
+  const defaultNotifications: NotificationSettings = {
+    emailNotifications: true,
+    pushNotifications: false,
+    partnershipRequests: true,
+    documentUpdates: true,
+    trustScoreChanges: true,
+    newReviews: false,
+    marketingUpdates: false,
+    ...initialNotifications,
+  };
+
+  const defaultPrivacy: PrivacySettings = {
+    profileVisibility: "public",
+    showContactInfo: true,
+    showBusinessAddress: true,
+    showEmployeeCount: false,
+    showRevenueInfo: false,
+    ...initialPrivacy,
+  };
+
+  const defaultBilling: BillingInfo = {
+    plan: {
+      name: "Pro Plan",
+      price: "$49/month",
+      status: "Active",
+    },
+    paymentMethod: {
+      last4: "4242",
+      expiryDate: "12/25",
+    },
+    billingHistory: [
+      {
+        month: "December 2023",
+        amount: "$49.00",
+        status: "Paid",
+        plan: "Pro Plan",
+      },
+      {
+        month: "November 2023",
+        amount: "$49.00",
+        status: "Paid",
+        plan: "Pro Plan",
+      },
+    ],
+    ...billingInfo,
+  };
+
+  const [emailNotifications, setEmailNotifications] = useState(
+    defaultNotifications.emailNotifications
+  );
+  const [pushNotifications, setPushNotifications] = useState(
+    defaultNotifications.pushNotifications
+  );
+  const [profileVisibility, setProfileVisibility] = useState(
+    defaultPrivacy.profileVisibility
+  );
 
   const handleSaveProfile = () => {
-    console.log("Save profile settings");
+    if (onSaveProfile) {
+      onSaveProfile(defaultProfile);
+    } else {
+      console.log("Save profile settings");
+    }
   };
 
   const handleSaveNotifications = () => {
-    console.log("Save notification settings");
+    const notificationSettings: NotificationSettings = {
+      ...defaultNotifications,
+      emailNotifications,
+      pushNotifications,
+    };
+
+    if (onSaveNotifications) {
+      onSaveNotifications(notificationSettings);
+    } else {
+      console.log("Save notification settings");
+    }
   };
 
   const handleSavePrivacy = () => {
-    console.log("Save privacy settings");
+    const privacySettings: PrivacySettings = {
+      ...defaultPrivacy,
+      profileVisibility,
+    };
+
+    if (onSavePrivacy) {
+      onSavePrivacy(privacySettings);
+    } else {
+      console.log("Save privacy settings");
+    }
   };
 
   return (
@@ -110,7 +268,7 @@ export function Settings() {
                     </Label>
                     <Input
                       id="businessName"
-                      defaultValue="Akhtar Industries"
+                      defaultValue={defaultProfile.businessName}
                       className="bg-gray-800 border-gray-600 text-white"
                     />
                   </div>
@@ -118,7 +276,7 @@ export function Settings() {
                     <Label htmlFor="industry" className="text-white">
                       Industry
                     </Label>
-                    <Select defaultValue="manufacturing">
+                    <Select defaultValue={defaultProfile.industry}>
                       <SelectTrigger className="bg-gray-800 border-gray-600 text-white">
                         <SelectValue />
                       </SelectTrigger>
@@ -140,7 +298,7 @@ export function Settings() {
                   </Label>
                   <Textarea
                     id="description"
-                    defaultValue="Leading industrial manufacturing company with over 25 years of experience in automotive and aerospace components."
+                    defaultValue={defaultProfile.description}
                     className="bg-gray-800 border-gray-600 text-white"
                     rows={4}
                   />
@@ -153,7 +311,7 @@ export function Settings() {
                     </Label>
                     <Input
                       id="website"
-                      defaultValue="www.akhtarindustries.com"
+                      defaultValue={defaultProfile.website}
                       className="bg-gray-800 border-gray-600 text-white"
                     />
                   </div>
@@ -163,7 +321,7 @@ export function Settings() {
                     </Label>
                     <Input
                       id="phone"
-                      defaultValue="+1 (555) 123-4567"
+                      defaultValue={defaultProfile.phone}
                       className="bg-gray-800 border-gray-600 text-white"
                     />
                   </div>
@@ -175,7 +333,7 @@ export function Settings() {
                   </Label>
                   <Input
                     id="address"
-                    defaultValue="123 Industrial Blvd, Detroit, MI 48201"
+                    defaultValue={defaultProfile.address}
                     className="bg-gray-800 border-gray-600 text-white"
                   />
                 </div>
@@ -205,7 +363,7 @@ export function Settings() {
                   <Input
                     id="email"
                     type="email"
-                    defaultValue="john@akhtarindustries.com"
+                    defaultValue={defaultProfile.email}
                     className="bg-gray-800 border-gray-600 text-white"
                   />
                 </div>
@@ -310,25 +468,37 @@ export function Settings() {
                       <span className="text-gray-300">
                         Partnership requests
                       </span>
-                      <Switch defaultChecked />
+                      <Switch
+                        defaultChecked={
+                          defaultNotifications.partnershipRequests
+                        }
+                      />
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-gray-300">
                         Document verification updates
                       </span>
-                      <Switch defaultChecked />
+                      <Switch
+                        defaultChecked={defaultNotifications.documentUpdates}
+                      />
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-gray-300">Trust score changes</span>
-                      <Switch defaultChecked />
+                      <Switch
+                        defaultChecked={defaultNotifications.trustScoreChanges}
+                      />
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-gray-300">New reviews</span>
-                      <Switch />
+                      <Switch
+                        defaultChecked={defaultNotifications.newReviews}
+                      />
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-gray-300">Marketing updates</span>
-                      <Switch />
+                      <Switch
+                        defaultChecked={defaultNotifications.marketingUpdates}
+                      />
                     </div>
                   </div>
                 </div>
@@ -357,7 +527,11 @@ export function Settings() {
                   <Label className="text-white">Profile Visibility</Label>
                   <Select
                     value={profileVisibility}
-                    onValueChange={setProfileVisibility}
+                    onValueChange={(value) =>
+                      setProfileVisibility(
+                        value as "public" | "verified" | "private"
+                      )
+                    }
                   >
                     <SelectTrigger className="bg-gray-800 border-gray-600 text-white">
                       <SelectValue />
@@ -381,19 +555,23 @@ export function Settings() {
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
                       <span className="text-gray-300">Contact information</span>
-                      <Switch defaultChecked />
+                      <Switch defaultChecked={defaultPrivacy.showContactInfo} />
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-gray-300">Business address</span>
-                      <Switch defaultChecked />
+                      <Switch
+                        defaultChecked={defaultPrivacy.showBusinessAddress}
+                      />
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-gray-300">Employee count</span>
-                      <Switch />
+                      <Switch
+                        defaultChecked={defaultPrivacy.showEmployeeCount}
+                      />
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-gray-300">Revenue information</span>
-                      <Switch />
+                      <Switch defaultChecked={defaultPrivacy.showRevenueInfo} />
                     </div>
                   </div>
                 </div>
@@ -423,9 +601,12 @@ export function Settings() {
                 <div className="p-4 bg-green-500/20 border border-green-500/30 rounded-lg">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-semibold text-green-400">Pro Plan</h3>
+                      <h3 className="font-semibold text-green-400">
+                        {defaultBilling.plan.name}
+                      </h3>
                       <p className="text-green-300 text-sm">
-                        $49/month - Active
+                        {defaultBilling.plan.price} -{" "}
+                        {defaultBilling.plan.status}
                       </p>
                     </div>
                     <Button
@@ -444,8 +625,12 @@ export function Settings() {
                       <div className="flex items-center space-x-3">
                         <CreditCard className="h-5 w-5 text-gray-400" />
                         <div>
-                          <p className="text-white">•••• •••• •••• 4242</p>
-                          <p className="text-gray-400 text-sm">Expires 12/25</p>
+                          <p className="text-white">
+                            •••• •••• •••• {defaultBilling.paymentMethod.last4}
+                          </p>
+                          <p className="text-gray-400 text-sm">
+                            Expires {defaultBilling.paymentMethod.expiryDate}
+                          </p>
                         </div>
                       </div>
                       <Button
@@ -462,26 +647,23 @@ export function Settings() {
                 <div className="space-y-4">
                   <Label className="text-white">Billing History</Label>
                   <div className="space-y-2">
-                    <div className="flex items-center justify-between p-3 bg-gray-800 rounded-lg">
-                      <div>
-                        <p className="text-white">December 2023</p>
-                        <p className="text-gray-400 text-sm">Pro Plan</p>
+                    {defaultBilling.billingHistory.map((item, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between p-3 bg-gray-800 rounded-lg"
+                      >
+                        <div>
+                          <p className="text-white">{item.month}</p>
+                          <p className="text-gray-400 text-sm">{item.plan}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-white">{item.amount}</p>
+                          <p className="text-green-400 text-sm">
+                            {item.status}
+                          </p>
+                        </div>
                       </div>
-                      <div className="text-right">
-                        <p className="text-white">$49.00</p>
-                        <p className="text-green-400 text-sm">Paid</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between p-3 bg-gray-800 rounded-lg">
-                      <div>
-                        <p className="text-white">November 2023</p>
-                        <p className="text-gray-400 text-sm">Pro Plan</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-white">$49.00</p>
-                        <p className="text-green-400 text-sm">Paid</p>
-                      </div>
-                    </div>
+                    ))}
                   </div>
                 </div>
               </CardContent>

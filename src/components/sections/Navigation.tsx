@@ -35,7 +35,7 @@ export function Navigation({ activeTab, onTabChange }: NavigationProps) {
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center space-x-8">
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1">
               <Image
                 src="/logo.svg"
                 alt="Lunoa Logo"
@@ -43,7 +43,7 @@ export function Navigation({ activeTab, onTabChange }: NavigationProps) {
                 height={24}
                 className="rounded-full"
               />
-              <span className="text-xl font-bold text-gray-300">Lunoa</span>
+              <span className="text-2xl font-bold text-gray-300">Lunoa</span>
             </div>
 
             <div className="flex space-x-1">
