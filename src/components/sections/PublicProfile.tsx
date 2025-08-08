@@ -98,13 +98,13 @@ interface PublicBusinessProfileProps {
 }
 
 export function PublicBusinessProfile({
-  businessName = "Akhtar Industries",
-  trustGrade = "B+",
-  trustPercentage = 78,
-  industry = "Manufacturing & Textiles",
-  location = "Lahore, Pakistan",
-  verificationDate = "June 22, 2024",
-  description = "Established textile manufacturer specializing in high-quality fabric production and export services across South Asia.",
+  businessName = "Tomeku Trading Corp",
+  trustGrade = "A-",
+  trustPercentage = 87,
+  industry = "Import/Export & Trading",
+  location = "Quezon City, Metro Manila",
+  verificationDate = "November 28, 2024",
+  description = "Leading import-export company specializing in consumer electronics and automotive parts distribution across Metro Manila and Luzon regions with over 15 years of industry experience.",
   trustBreakdown,
   verifiedDocuments,
   businessStats,
@@ -156,36 +156,42 @@ export function PublicBusinessProfile({
 
   const defaultVerifiedDocuments: VerifiedDocument[] = [
     {
-      type: "Business License",
+      type: "DTI Business Registration",
       status: "Verified",
       date: "Dec 15, 2023",
       category: "Legal",
     },
     {
-      type: "Tax Return 2023",
+      type: "BIR Certificate of Registration",
       status: "Verified",
       date: "Jan 10, 2024",
-      category: "Financial",
+      category: "Tax",
     },
     {
-      type: "Client Reference - TechCorp",
+      type: "Client Reference - Ayala Corp",
       status: "Verified",
       date: "Nov 28, 2023",
       category: "Reference",
     },
+    {
+      type: "SEC Company Registration",
+      status: "Verified",
+      date: "Oct 15, 2023",
+      category: "Legal",
+    },
   ];
 
   const defaultBusinessStats: BusinessStats = {
-    yearsActive: 8,
-    documentsVerified: 12,
-    partnerReferences: 3,
-    lastUpdated: "2 days ago",
+    yearsActive: 15,
+    documentsVerified: 18,
+    partnerReferences: 6,
+    lastUpdated: "1 day ago",
   };
 
   const defaultContactInfo: ContactInfo = {
-    phone: "+92 123 456 7890",
-    website: "www.akhtarindustries.com",
-    email: "contact@akhtarindustries.com",
+    phone: "+63 917 123 4567",
+    website: "www.tomeku.com.ph",
+    email: "partnerships@tomeku.com.ph",
   };
 
   // Use provided props or defaults
