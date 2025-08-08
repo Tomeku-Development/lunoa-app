@@ -1,6 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
+import { Shield, TrendingUp, ThumbsUp } from "lucide-react";
 import { PublicBusinessProfile } from "@/components/sections/PublicProfile";
 import { businesses } from "@/mock/mock";
 import { findBusinessBySlug } from "@/lib/utils";
@@ -20,8 +21,8 @@ export default function BusinessProfilePage() {
             Business Not Found
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
-            The business you're looking for doesn't exist or the link may be
-            incorrect.
+            The business you&apos;re looking for doesn&apos;t exist or the link
+            may be incorrect.
           </p>
         </div>
       </div>
@@ -32,20 +33,25 @@ export default function BusinessProfilePage() {
   const trustBreakdown = [
     {
       title: "Compliance",
-      status: business.verified ? ("strong" as const) : ("moderate" as const),
-      icon: require("lucide-react").Shield,
-      description: business.verified
-        ? "Fully verified business"
-        : "Verification in progress",
-      details: business.verified
-        ? "All legal documents verified and up-to-date"
-        : "Some documents pending verification",
-      color: business.verified ? "green" : "yellow",
+      status:
+        (business.trustGrade === "A+" || business.trustGrade === "A")
+          ? ("strong" as const)
+          : ("moderate" as const),
+      icon: Shield,
+      description:
+        (business.trustGrade === "A+" || business.trustGrade === "A")
+          ? "Fully verified business"
+          : "Verification in progress",
+      details:
+        (business.trustGrade === "A+" || business.trustGrade === "A")
+          ? "All legal documents verified and up-to-date"
+          : "Some documents pending verification",
+      color: (business.trustGrade === "A+" || business.trustGrade === "A") ? "green" : "yellow",
     },
     {
       title: "Performance",
       status: "moderate" as const,
-      icon: require("lucide-react").TrendingUp,
+      icon: TrendingUp,
       description: "Financial records available",
       details: "Recent financial performance data verified",
       color: "yellow",
@@ -53,22 +59,22 @@ export default function BusinessProfilePage() {
     {
       title: "Reputation",
       status:
-        business.rating >= 4 ? ("strong" as const) : ("moderate" as const),
-      icon: require("lucide-react").ThumbsUp,
-      description: `${business.reviewCount} customer reviews`,
-      details: `Average rating of ${business.rating} stars from verified customers`,
-      color: business.rating >= 4 ? "green" : "yellow",
+        (business.rating || 0) >= 4 ? ("strong" as const) : ("moderate" as const),
+      icon: ThumbsUp,
+      description: `${business.reviewCount || 0} customer reviews`,
+      details: `Average rating of ${business.rating || 0} stars from verified customers`,
+      color: (business.rating || 0) >= 4 ? "green" : "yellow",
     },
   ];
 
   return (
     <PublicBusinessProfile
       businessName={business.name}
-      trustGrade={business.trustGrade}
-      trustPercentage={business.trustPercentage}
-      industry={business.industry}
-      location={business.location}
-      description={business.description}
+      trustGrade={business.trustGrade || "B"}
+      trustPercentage={business.trustPercentage || 75}
+      industry={business.industry || "General Business"}
+      location={business.location || "Location Not Available"}
+      description={business.description || "No description available"}
       trustBreakdown={trustBreakdown}
       onContactBusiness={(businessName) => {
         console.log(`Contacting ${businessName}`);

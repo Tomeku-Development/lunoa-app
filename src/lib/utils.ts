@@ -13,8 +13,22 @@ export function createBusinessSlug(businessName: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
+interface Business {
+  id: string | number;
+  name: string;
+  trustGrade?: string;
+  trustPercentage?: number;
+  rating?: number;
+  reviewCount?: number;
+  industry?: string;
+  location?: string;
+  description?: string;
+  phone?: string;
+  website?: string;
+}
+
 // Find business by slug (converted from name)
-export function findBusinessBySlug(businesses: any[], slug: string) {
+export function findBusinessBySlug(businesses: Business[], slug: string) {
   return businesses.find((business) => {
     const businessSlug = createBusinessSlug(business.name);
     return businessSlug === slug;
@@ -22,6 +36,6 @@ export function findBusinessBySlug(businesses: any[], slug: string) {
 }
 
 // Alternative: Find business by ID if you prefer using IDs
-export function findBusinessById(businesses: any[], id: string) {
+export function findBusinessById(businesses: Business[], id: string) {
   return businesses.find((business) => business.id.toString() === id);
 }
